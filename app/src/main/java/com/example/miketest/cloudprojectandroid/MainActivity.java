@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,11 +30,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
     @Override
     protected void onResume() {
         super.onResume();
-        setUpSensors();
+        //setUpSensors();
+        DownloadWebPageTask task = new DownloadWebPageTask();
+        task.execute();
     }
     protected void onPause() {
         super.onPause();
@@ -92,10 +96,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void cloudTest(){
 
+        System.out.println("cloud begin");
         String storageConnectionString =
-                "DefaultEndpointsProtocol=http;" +
-                        "AccountName=your_storage_account;" +
-                        "AccountKey=your_storage_account_key";
+                "DefaultEndpointsProtocol=https;AccountName=hkrtest;AccountKey=xMmOQjMFbLY6R5cHcfUAQjZXRRp50eLTiFspybB929IGYsBnuVbCME/6bcxejT2kd3rEJLBBfcQXi8e0TLfPbg==;EndpointSuffix=core.windows.net";
         try
         {
             // Retrieve storage account from connection-string.
@@ -109,12 +112,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             String tableName = "people";
             CloudTable cloudTable = tableClient.getTableReference(tableName);
             cloudTable.createIfNotExists();
+
+            System.out.println("cloud trycatch");
         }
         catch (Exception e)
         {
             // Output the stack trace.
             e.printStackTrace();
         }
+
+        System.out.println("cloud end");
     }
+
+
+
+
+    private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            // we use the OkHttp library from https://github.com/square/okhttp
+            cloudTest();
+
+                        return "Download failed";
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+
+    }
+}
+
 
 }
