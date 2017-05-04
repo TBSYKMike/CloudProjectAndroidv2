@@ -11,6 +11,13 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.table.CloudTable;
+import com.microsoft.azure.storage.table.CloudTableClient;
+
+// Include the following imports to use table APIs
+
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private float currentAccelerationValue = SensorManager.GRAVITY_EARTH;
     private float previousAccelerationValue = SensorManager.GRAVITY_EARTH;
@@ -22,14 +29,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setUpSensors();
-
-
-
     }
     @Override
     protected void onResume() {
         super.onResume();
+        setUpSensors();
     }
     protected void onPause() {
         super.onPause();
@@ -82,6 +86,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int scale = batteryCurrentStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
         float batteryPercentLeft = level / (float)scale;
         System.out.println("Battery level is:   " + batteryPercentLeft);
+    }
+
+
+
+    private void cloudTest(){
+
+        String storageConnectionString =
+                "DefaultEndpointsProtocol=http;" +
+                        "AccountName=your_storage_account;" +
+                        "AccountKey=your_storage_account_key";
+        try
+        {
+            // Retrieve storage account from connection-string.
+            CloudStorageAccount storageAccount =
+                    CloudStorageAccount.parse(storageConnectionString);
+
+            // Create the table client.
+            CloudTableClient tableClient = storageAccount.createCloudTableClient();
+
+            // Create the table if it doesn't exist.
+            String tableName = "people";
+            CloudTable cloudTable = tableClient.getTableReference(tableName);
+            cloudTable.createIfNotExists();
+        }
+        catch (Exception e)
+        {
+            // Output the stack trace.
+            e.printStackTrace();
+        }
     }
 
 }
