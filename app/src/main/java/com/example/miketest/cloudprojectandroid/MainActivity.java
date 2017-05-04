@@ -1,11 +1,15 @@
 package com.example.miketest.cloudprojectandroid;
 
-import android.hardware.SensorManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.BatteryManager;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private float currentAccelerationValue = SensorManager.GRAVITY_EARTH;
@@ -19,6 +23,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpSensors();
+
+
+
     }
     @Override
     protected void onResume() {
@@ -58,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         else if(sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY){
             System.out.println("Proximity sensor value " + sensorEvent.values[0]);
+            checkBatteryLevel();
         }
 
     }
@@ -65,6 +73,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    private void checkBatteryLevel(){
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryCurrentStatus = getApplicationContext().registerReceiver(null, intentFilter);
+        int level = batteryCurrentStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryCurrentStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        float batteryPercentLeft = level / (float)scale;
+        System.out.println("Battery level is:   " + batteryPercentLeft);
     }
 
 }
