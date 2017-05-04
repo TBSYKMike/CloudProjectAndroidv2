@@ -11,15 +11,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float currentAccelerationValue = SensorManager.GRAVITY_EARTH;
     private float previousAccelerationValue = SensorManager.GRAVITY_EARTH;
     private float accelerationValue = 0.00f;
-    private Sensor sensor;
+
     private SensorManager sensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-        setUpAccelerometer();
+        setUpSensors();
     }
     @Override
     protected void onResume() {
@@ -27,27 +26,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     protected void onPause() {
         super.onPause();
+        System.out.println("On resume");
         sensorManager.unregisterListener(this);
     }
-    private void setUpAccelerometer() {
+
+    private void setUpSensors() {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorManager.SENSOR_DELAY_NORMAL);
     }
+
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        float xValue = sensorEvent.values[0];
-        float yValue = sensorEvent.values[1];
-        float zValue = sensorEvent.values[2];
+        if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            float xValue = sensorEvent.values[0];
+            float yValue = sensorEvent.values[1];
+            float zValue = sensorEvent.values[2];
 
-        previousAccelerationValue = currentAccelerationValue;
-        currentAccelerationValue = (float) (float) Math.sqrt(xValue * xValue + yValue * yValue + zValue * zValue);
-        float accelerationValueChange = currentAccelerationValue - previousAccelerationValue;
-        accelerationValue = accelerationValue * 0.9f + accelerationValueChange;
-        if (accelerationValue > 15) {
-            System.out.println("Sensor change");
+            previousAccelerationValue = currentAccelerationValue;
+            currentAccelerationValue = (float) (float) Math.sqrt(xValue * xValue + yValue * yValue + zValue * zValue);
+            float accelerationValueChange = currentAccelerationValue - previousAccelerationValue;
+            accelerationValue = accelerationValue * 0.9f + accelerationValueChange;
+            if (accelerationValue > 15) {
+                System.out.println("Accelerometer change");
+            }
         }
+        else if(sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT){
+            System.out.println("Light sensor value " + sensorEvent.values[0]);
+        }
+        else if(sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY){
+            System.out.println("Proximity sensor value " + sensorEvent.values[0]);
+        }
+
     }
 
     @Override
