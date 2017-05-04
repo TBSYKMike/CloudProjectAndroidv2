@@ -36,8 +36,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         //setUpSensors();
-        DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute();
+      //  DownloadWebPageTask task = new DownloadWebPageTask();
+        //task.execute();
+        //     new DownloadWebPageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new DownloadWebPageTask().execute();
+
     }
     protected void onPause() {
         super.onPause();
@@ -94,45 +97,48 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-    private void cloudTest(){
 
-        System.out.println("cloud begin");
-        String storageConnectionString =
-                "DefaultEndpointsProtocol=https;AccountName=hkrtest;AccountKey=xMmOQjMFbLY6R5cHcfUAQjZXRRp50eLTiFspybB929IGYsBnuVbCME/6bcxejT2kd3rEJLBBfcQXi8e0TLfPbg==;EndpointSuffix=core.windows.net";
-        try
-        {
-            // Retrieve storage account from connection-string.
-            CloudStorageAccount storageAccount =
-                    CloudStorageAccount.parse(storageConnectionString);
-
-            // Create the table client.
-            CloudTableClient tableClient = storageAccount.createCloudTableClient();
-
-            // Create the table if it doesn't exist.
-            String tableName = "people";
-            CloudTable cloudTable = tableClient.getTableReference(tableName);
-            cloudTable.createIfNotExists();
-
-            System.out.println("cloud trycatch");
-        }
-        catch (Exception e)
-        {
-            // Output the stack trace.
-            e.printStackTrace();
-        }
-
-        System.out.println("cloud end");
-    }
 
 
 
 
     private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
+        CloudTable cloudTable;
+        private void cloudTest(){
+
+            System.out.println("cloud begin");
+            String storageConnectionString =
+                    "DefaultEndpointsProtocol=https;AccountName=hkrtest;AccountKey=xMmOQjMFbLY6R5cHcfUAQjZXRRp50eLTiFspybB929IGYsBnuVbCME/6bcxejT2kd3rEJLBBfcQXi8e0TLfPbg==;EndpointSuffix=core.windows.net";
+            try
+            {
+                System.out.println("1");
+                // Retrieve storage account from connection-string.
+                CloudStorageAccount storageAccount =
+                        CloudStorageAccount.parse(storageConnectionString);
+                System.out.println("2");
+                // Create the table client.
+                CloudTableClient tableClient = storageAccount.createCloudTableClient();
+                System.out.println("3");
+                // Create the table if it doesn't exist.
+                String tableName = "people";
+                 cloudTable = tableClient.getTableReference(tableName);
+                System.out.println("4");
+                cloudTable.createIfNotExists();
+                System.out.println("cloud trycatch");
+            }
+            catch (Exception e)
+            {
+                // Output the stack trace.
+                e.printStackTrace();
+            }
+
+            System.out.println("cloud end");
+        }
+
         @Override
         protected String doInBackground(String... urls) {
             // we use the OkHttp library from https://github.com/square/okhttp
             cloudTest();
-
                         return "Download failed";
     }
 
