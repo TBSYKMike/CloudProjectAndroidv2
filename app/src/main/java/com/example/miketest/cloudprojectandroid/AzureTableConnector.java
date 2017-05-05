@@ -12,10 +12,27 @@ import com.microsoft.azure.storage.table.TableOperation;
  */
 
 public class AzureTableConnector extends AsyncTask<String, Void, String> {
+
+    private String sensorType = "";
+    private String value1 = "";
+    private String value2 = "";
+    private String value3 = "";
+
+
+    public AzureTableConnector(String sensorType, String value1, String value2, String value3) {
+        this.sensorType = sensorType;
+        this.value1 = value1;
+        this.value2 = value2;
+        this.value3 = value3;
+    }
+
     @Override
     protected String doInBackground(String... params) {
         // we use the OkHttp library from https://github.com/square/okhttp
-        cloudTest(params[0], params[1], params[2]);
+
+        // params[0] is for the type of sensor
+        // params[1-3] is for the value from the sensor
+        cloudTest(sensorType, value1, value2, value3);
         return "Download failed";
     }
 
@@ -24,7 +41,18 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
 
     }
 
-    private void cloudTest(String param0, String param1, String param2) {
+    private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3){
+        SensorEntity sensor1 = new SensorEntity("User1",  Long.toString( System.nanoTime() ) );
+        if (sensorType.equals("accelerometer")) {
+            sensor1.setSensorAccelerometerX(value1);
+            sensor1.setSensorAccelerometerY(value2);
+            sensor1.setSensorAccelerometerZ(value3);
+        }
+
+        return sensor1;
+    }
+
+    private void cloudTest(String sensorType, String value1, String value2, String value3) {
 
         System.out.println("cloud begin");
         String storageConnectionString =
@@ -56,10 +84,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
 
 
             // Create a new customer entity.
-            SensorEntity sensor1 = new SensorEntity("User1",  Long.toString( System.nanoTime() ) );
-            sensor1.setSensorAccelerometerX(param0);
-            sensor1.setSensorAccelerometerY(param1);
-            sensor1.setSensorAccelerometerZ(param2);
+            SensorEntity sensor1 = inputRightSensorData( sensorType, value1, value2, value3 );
 
             // Create an operation to add the new customer to the people table.
             TableOperation insertCustomer1 = TableOperation.insertOrReplace(sensor1);

@@ -52,7 +52,7 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             accelerationValue = accelerationValue * 0.9f + accelerationValueChange;
             if (true) {
                 System.out.println("Accelerometer change"+" X,Y,Z: "+xValue+","+yValue+","+zValue);
-                new AzureTableConnector().execute(Float.toString(xValue),Float.toString(yValue),Float.toString(zValue));
+                new AzureTableConnector("accelerometer", Float.toString(xValue),Float.toString(yValue),Float.toString(zValue)).execute();
             }
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
             System.out.println("Light sensor value " + sensorEvent.values[0]);
