@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.table.CloudTable;
 import com.microsoft.azure.storage.table.CloudTableClient;
+import com.microsoft.azure.storage.table.TableOperation;
 
 /**
  * Created by Henrik on 2017-05-05.
@@ -12,9 +13,9 @@ import com.microsoft.azure.storage.table.CloudTableClient;
 
 public class AzureTableConnector extends AsyncTask<String, Void, String> {
     @Override
-    protected String doInBackground(String... urls) {
+    protected String doInBackground(String... params) {
         // we use the OkHttp library from https://github.com/square/okhttp
-        cloudTest();
+        cloudTest(params[0], params[1], params[2]);
         return "Download failed";
     }
 
@@ -23,7 +24,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
 
     }
 
-    private void cloudTest() {
+    private void cloudTest(String param0, String param1, String param2) {
 
         System.out.println("cloud begin");
         String storageConnectionString =
@@ -49,6 +50,30 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
                 // Output each table name.
                 System.out.println(table);
             }
+
+
+
+
+
+            // Create a new customer entity.
+            SensorEntity sensor1 = new SensorEntity("User1",  Long.toString( System.nanoTime() ) );
+            sensor1.setSensorAccelerometerX(param0);
+            sensor1.setSensorAccelerometerY(param1);
+            sensor1.setSensorAccelerometerZ(param2);
+
+            // Create an operation to add the new customer to the people table.
+            TableOperation insertCustomer1 = TableOperation.insertOrReplace(sensor1);
+
+            // Submit the operation to the table service.
+            cloudTable.execute(insertCustomer1);
+
+
+
+
+
+
+
+
 
         } catch (Exception e) {
             // Output the stack trace.
