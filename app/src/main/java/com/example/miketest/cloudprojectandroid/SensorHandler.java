@@ -50,8 +50,8 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             currentAccelerationValue = (float) (float) Math.sqrt(xValue * xValue + yValue * yValue + zValue * zValue);
             float accelerationValueChange = currentAccelerationValue - previousAccelerationValue;
             accelerationValue = accelerationValue * 0.9f + accelerationValueChange;
-            if (accelerationValue > 15) {
-                System.out.println("Accelerometer change");
+            if (true) {
+                System.out.println("Accelerometer change"+" X,Y,Z: "+xValue+","+yValue+","+zValue);
             }
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
             System.out.println("Light sensor value " + sensorEvent.values[0]);
