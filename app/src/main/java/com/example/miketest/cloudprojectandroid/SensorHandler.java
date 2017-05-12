@@ -56,8 +56,10 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             }
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
             System.out.println("Light sensor value " + sensorEvent.values[0]);
+            new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             System.out.println("Proximity sensor value " + sensorEvent.values[0]);
+            new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
             checkBatteryLevel();
         }
 

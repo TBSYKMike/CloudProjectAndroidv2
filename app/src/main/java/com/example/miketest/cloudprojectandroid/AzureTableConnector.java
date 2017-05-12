@@ -48,6 +48,17 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
             sensor1.setSensorAccelerometerY(value2);
             sensor1.setSensorAccelerometerZ(value3);
         }
+        else if (sensorType.equals("lightsensor")) {
+            sensor1.setSensorLight(value1);
+        }
+        else if (sensorType.equals("proximitysensor")) {
+            sensor1.setSensorProximity(value1);
+        }
+        else if (sensorType.equals("New Sensor Name")) {
+            // Example for adding new sensors for future messurments
+            // sensor1.getSensorPlaceholder1(value1);
+        }
+
 
         return sensor1;
     }
