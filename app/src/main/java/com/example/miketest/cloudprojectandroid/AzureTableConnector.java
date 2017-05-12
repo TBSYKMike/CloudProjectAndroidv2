@@ -84,7 +84,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
 
 
             // Create a new customer entity.
-            SensorEntity sensor1 = inputRightSensorData( sensorType, value1, value2, value3 );
+            SensorEntity sensor1 = inputRightSensorData(sensorType, value1, value2, value3 );
 
             // Create an operation to add the new customer to the people table.
             TableOperation insertCustomer1 = TableOperation.insertOrReplace(sensor1);
