@@ -10,10 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.miketest.cloudprojectandroid.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/settingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView" />
-
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="17dp"
+        android:layout_marginEnd="11dp"
+        android:onClick="buttonClicked"
+        android:text="Settings" />
 </RelativeLayout>

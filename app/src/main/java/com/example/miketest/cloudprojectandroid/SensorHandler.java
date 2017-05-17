@@ -3,12 +3,14 @@ package com.example.miketest.cloudprojectandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
+import android.preference.PreferenceManager;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -22,15 +24,17 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     private float accelerationValue = 0.00f;
     private Context context;
     private SensorManager sensorManager;
+    private int sensorFreqencySaved = 10000;
 
     public SensorHandler(Context context) {
         this.context = context;
     }
 
+
     @Override
     protected String doInBackground(String... params) {
         System.out.println("SensorHandler");
-        setUpSensors();
+        setUpSensors(10000);
         return null;
     }
 
@@ -52,15 +56,26 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             accelerationValue = accelerationValue * 0.9f + accelerationValueChange;
             if (true) {
                 System.out.println("Accelerometer change"+" X,Y,Z: "+xValue+","+yValue+","+zValue);
-                new AzureTableConnector("accelerometer", Float.toString(xValue),Float.toString(yValue),Float.toString(zValue)).execute();
+              //  new AzureTableConnector("accelerometer", Float.toString(xValue),Float.toString(yValue),Float.toString(zValue)).execute();
             }
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
             System.out.println("Light sensor value " + sensorEvent.values[0]);
-            new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), "", "" ).execute();
+            //new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             System.out.println("Proximity sensor value " + sensorEvent.values[0]);
-            new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), "", "" ).execute();
+           // new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
             checkBatteryLevel();
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int sensorFrequency = prefs.getInt("sensorFrequency", 10000);
+
+        System.out.println("new value  " + sensorFrequency);
+
+        if(sensorFreqencySaved!=sensorFrequency){
+            sensorManager.unregisterListener(this);
+            setUpSensors(sensorFrequency);
+            sensorFreqencySaved = sensorFrequency;
         }
 
     }
@@ -71,11 +86,11 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     }
 
 
-    private void setUpSensors() {
+    private void setUpSensors(int sensorDelayMicroseconds) {
         sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelayMicroseconds );
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelayMicroseconds);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorDelayMicroseconds );
     }
 
     private void checkBatteryLevel() {
@@ -86,5 +101,6 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         float batteryPercentLeft = level / (float) scale;
         System.out.println("Battery level is:   " + batteryPercentLeft);
     }
+
 
 }

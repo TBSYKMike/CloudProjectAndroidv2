@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class SoundRecorder extends AppCompatActivity { //Direkt från androiddokumentation. För test
 
-    private static final String LOG_TAG = "AudioRecordTest";
+    private static final String LOG_TAG = "SoundRecorder";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String mFileName = null;
 
@@ -151,7 +151,7 @@ public class SoundRecorder extends AppCompatActivity { //Direkt från androiddok
       //  setContentView(R.layout.activity_record);
         // Record to the external cache directory for visibility
         mFileName = getExternalCacheDir().getAbsolutePath();
-        mFileName += "/audiorecordtest.3gp";
+        mFileName += "/SoundRecorder.3gp";
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
