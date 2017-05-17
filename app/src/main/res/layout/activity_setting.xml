@@ -16,8 +16,6 @@
         android:layout_height="wrap_content"
         android:onClick="testButton"
         android:text="Button"
-        android:layout_marginTop="81dp"
-        android:layout_marginStart="70dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
@@ -61,5 +59,37 @@
             android:onClick="onRadioButtonClicked"/>
 
     </RadioGroup>
+
+    <Switch
+        android:id="@+id/accelerometerSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/proximitySwitch"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="75dp"
+        android:text="Accelerometer"
+        android:textOff="Off"
+        android:textOn="On" />
+
+    <Switch
+        android:id="@+id/lightSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/accelerometerSwitch"
+        android:layout_below="@+id/accelerometerSwitch"
+        android:layout_marginTop="16dp"
+        android:text="Light"
+        android:textOff="Off"
+        android:textOn="On" />
+
+    <Switch
+        android:id="@+id/proximitySwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/lightSwitch"
+        android:layout_below="@+id/button2"
+        android:text="Proximity"
+        android:textOff="Off"
+        android:textOn="On" />
 
 </RelativeLayout>

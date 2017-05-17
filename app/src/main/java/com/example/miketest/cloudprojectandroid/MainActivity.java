@@ -44,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.sensorStartButton:
+                
+                break;
+            case R.id.sensorStopButton:
+
+                break;
         }
 
     }

@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.Switch;
 
 /**
  * Created by Henrik on 2017-05-17.
@@ -16,7 +18,52 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+
+
+        Switch onOffSwitchLight = (Switch)  findViewById(R.id.lightSwitch);
+        onOffSwitchLight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+
+                }
+                else{
+
+                }
+            }
+
+        });
+
+        Switch onOffSwitchProximity = (Switch)  findViewById(R.id.proximitySwitch);
+        onOffSwitchProximity.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+
+                }
+                else{
+
+                }
+            }
+
+        });
+
+        Switch onOffSwitchAccelerometer = (Switch)  findViewById(R.id.accelerometerSwitch);
+        onOffSwitchAccelerometer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+
+                    }
+                    else{
+
+                    }
+            }
+
+        });
     }
+
 
     @Override
     protected void onResume() {
@@ -35,29 +82,32 @@ public class SettingActivity extends AppCompatActivity {
 
 
 
+
+
+
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
         switch(view.getId()) {
             case R.id.lowSampling:
                 if (checked)
-                    updateSharedStorageSamplingRate(10000000);
+                    saveIntoSharedPreferences(10000000,"sensorFrequency");
                     break;
             case R.id.mediumSampling:
                 if (checked)
-                    updateSharedStorageSamplingRate(1000000);
+                    saveIntoSharedPreferences(1000000,"sensorFrequency");
                     break;
 
             case R.id.fastSampling:
                 if (checked)
-                    updateSharedStorageSamplingRate(100000);
+                    saveIntoSharedPreferences(100000,"sensorFrequency");
                     break;
         }
     }
 
-    private void updateSharedStorageSamplingRate(int samplingRate){
+    private void saveIntoSharedPreferences(int value, String sharedPreferencesName){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("sensorFrequency", samplingRate);
+        editor.putInt(sharedPreferencesName, value);
         editor.commit();
     }
 
