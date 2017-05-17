@@ -100,6 +100,11 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         int scale = batteryCurrentStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
         float batteryPercentLeft = level / (float) scale;
         System.out.println("Battery level is:   " + batteryPercentLeft);
+
+
+        System.out.println("USAGE:   " + sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).getPower());
+        System.out.println("USAGE light:   " + sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT).getPower());
+        System.out.println("USAGE prox:   " + sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY).getPower());
     }
 
 
