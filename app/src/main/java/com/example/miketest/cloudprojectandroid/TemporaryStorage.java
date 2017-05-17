@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 class TemporaryStorage {
     private static final TemporaryStorage ourInstance = new TemporaryStorage();
+    private boolean accelerometerOnOff;
+    private boolean proximityOnOff;
+    private boolean lightOnOff;
 
     static TemporaryStorage getInstance() {
         return ourInstance;

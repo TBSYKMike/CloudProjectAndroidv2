@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.sensorStartButton:
-                
+
                 break;
             case R.id.sensorStopButton:
 
