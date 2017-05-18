@@ -1,24 +1,10 @@
 package com.example.miketest.cloudprojectandroid;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import java.io.IOException;
+public class SoundRecorder extends AppCompatActivity { //Ska inte användas
 
-public class SoundRecorder extends AppCompatActivity { //Direkt från androiddokumentation. För test
-
-    private static final String LOG_TAG = "SoundRecorder";
+   /* private static final String LOG_TAG = "SoundRecorder";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String mFileName = null;
 
@@ -183,5 +169,5 @@ public class SoundRecorder extends AppCompatActivity { //Direkt från androiddok
             mPlayer.release();
             mPlayer = null;
         }
-    }
+    }*/
 }

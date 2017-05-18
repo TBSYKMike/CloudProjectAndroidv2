@@ -56,14 +56,14 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             accelerationValue = accelerationValue * 0.9f + accelerationValueChange;
             if (true) {
                 System.out.println("Accelerometer change"+" X,Y,Z: "+xValue+","+yValue+","+zValue);
-              //  new AzureTableConnector("accelerometer", Float.toString(xValue),Float.toString(yValue),Float.toString(zValue)).execute();
+             //  new AzureTableConnector("accelerometer", Float.toString(xValue),Float.toString(yValue),Float.toString(zValue)).execute();
             }
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
             System.out.println("Light sensor value " + sensorEvent.values[0]);
-            //new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
+           // new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             System.out.println("Proximity sensor value " + sensorEvent.values[0]);
-           // new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
+         //   new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
             checkBatteryLevel();
         }
 
