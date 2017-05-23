@@ -11,6 +11,7 @@ class TemporaryStorage {
     private boolean accelerometerOnOff;
     private boolean proximityOnOff;
     private boolean lightOnOff;
+    private boolean sensorStop;
 
     static TemporaryStorage getInstance() {
         return ourInstance;
@@ -31,5 +32,11 @@ class TemporaryStorage {
     }
 
 
+    public boolean isSensorStop() {
+        return sensorStop;
+    }
 
+    public void setSensorStop(boolean sensorStop) {
+        this.sensorStop = sensorStop;
+    }
 }

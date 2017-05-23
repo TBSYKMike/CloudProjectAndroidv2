@@ -1,68 +1,55 @@
 package com.example.miketest.cloudprojectandroid;
 
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.Switch;
-
 /**
  * Created by Henrik on 2017-05-17.
  */
 
-public class SettingActivity extends AppCompatActivity {
-    @Override
+/*public class SettingActivity extends AppCompatActivity {
+
+
+  /*  @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-
-
-        Switch onOffSwitchLight = (Switch)  findViewById(R.id.lightSwitch);
+       Switch onOffSwitchLight = (Switch)  findViewById(R.id.lightSwitch);
+        onOffSwitchLight.setChecked(getValueFromSharedPreferences("lightOnfOff"));
         onOffSwitchLight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-
-                }
-                else{
-
-                }
+                setSensorStatus(isChecked, "lightOnOff");
             }
-
         });
 
         Switch onOffSwitchProximity = (Switch)  findViewById(R.id.proximitySwitch);
+        onOffSwitchLight.setChecked(getValueFromSharedPreferences("proximityOnOff"));
         onOffSwitchProximity.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-
-                }
-                else{
-
-                }
+                setSensorStatus(isChecked,"proximityOnOff");
             }
-
         });
 
         Switch onOffSwitchAccelerometer = (Switch)  findViewById(R.id.accelerometerSwitch);
+        onOffSwitchLight.setChecked(getValueFromSharedPreferences("accelerometerOnOff"));
         onOffSwitchAccelerometer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
-
-                    }
-                    else{
-
-                    }
+                setSensorStatus(isChecked, "accelerometerOnOff");
             }
-
         });
     }
+
+  /*  private void setSensorStatus(boolean isChecked, String sharedPreferenceKey){
+        if(isChecked){
+            saveIntoSharedPreferences(1, sharedPreferenceKey);
+        }
+        else{
+            saveIntoSharedPreferences(0, sharedPreferenceKey);
+        }
+    }
+
+
 
 
     @Override
@@ -74,15 +61,6 @@ public class SettingActivity extends AppCompatActivity {
         super.onPause();
         System.out.println("On resume");
     }
-
-    public void testButton(View view){
-
-    }
-
-
-
-
-
 
 
     public void onRadioButtonClicked(View view) {
@@ -111,5 +89,15 @@ public class SettingActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    private boolean getValueFromSharedPreferences(String sensorPrefName){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int status = prefs.getInt(sensorPrefName, 1);
+        if(status==1)
+            return true;
+        else
+            return false;
+    }
 
-}
+*/
+
+

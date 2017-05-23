@@ -3,14 +3,12 @@ package com.example.miketest.cloudprojectandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
-import android.preference.PreferenceManager;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -24,7 +22,9 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     private float accelerationValue = 0.00f;
     private Context context;
     private SensorManager sensorManager;
-    private int sensorFreqencySaved = 10000;
+//    private int sensorFreqencySaved = 10000;
+
+
 
     public SensorHandler(Context context) {
         this.context = context;
@@ -67,18 +67,60 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             checkBatteryLevel();
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        /* SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int sensorFrequency = prefs.getInt("sensorFrequency", 10000);
-
         System.out.println("new value  " + sensorFrequency);
 
-        if(sensorFreqencySaved!=sensorFrequency){
+       if(sensorFreqencySaved!=sensorFrequency){
             sensorManager.unregisterListener(this);
             setUpSensors(sensorFrequency);
             sensorFreqencySaved = sensorFrequency;
+        }*/
+
+        if(TemporaryStorage.getInstance().isSensorStop()){
+            sensorManager.unregisterListener(this);
         }
 
+
+    //    checkSensorStatus("accelerometerOnOff");
+      //  checkSensorStatus("proximityOnOff");
+      //  checkSensorStatus("lightOnOff");
+
     }
+
+ /*   private void checkSensorStatus(String sensorPrefName){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int axOnOffStored = prefs.getInt(sensorPrefName, 1);
+        if(axOnOffStored==0){
+            turnOffSensor(sensorPrefName);
+        }
+        else{
+            turnOnSensor(sensorPrefName);
+        }
+    }
+
+
+    private void turnOffSensor(String sensorName){
+            if (sensorName.equals("accelerometerOnOff"))
+                sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+            else if (sensorName.equals("lightOnOff"))
+                sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT));
+            else if (sensorName.equals("proximityOnOff"))
+                sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY));
+    }*/
+
+   /* private void turnOnSensor(String sensorName){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int sensorFrequency = prefs.getInt("sensorFrequency", 10000);
+
+        if (sensorName.equals("accelerometerOnOff"))
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),sensorFrequency);
+        else if (sensorName.equals("lightOnOff"))
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),sensorFrequency);
+        else if (sensorName.equals("proximityOnOff"))
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY),sensorFrequency);
+    }*/
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {

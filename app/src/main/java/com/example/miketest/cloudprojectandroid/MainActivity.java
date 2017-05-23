@@ -8,11 +8,8 @@ import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Locale;
-
-// Include the following imports to use table APIs
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,11 +19,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initializeSpeechToTest();
+      //  new WebServiceConnector().execute();
+
     }
 
 
-    private void initializeSpeechToTest() {
+    private void initializeSpeechToText() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -56,11 +54,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-
-
-        new SensorHandler(this).execute();
-
     }
 
     protected void onPause() {
@@ -73,19 +66,23 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
 
         switch (view.getId()) {
-            case R.id.settingButton:
-                intent = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(intent);
-                break;
+           // case R.id.settingButton:
+             //   intent = new Intent(MainActivity.this, SettingActivity.class);
+               // startActivity(intent);
+               // break;
             case R.id.sensorStartButton:
-
+                initializeSpeechToText();
+                new SensorHandler(this).execute();
                 break;
             case R.id.sensorStopButton:
-
+                //Upload to cloud
+                initializeSpeechToText();
                 break;
         }
 
     }
+
+
 
 
 
