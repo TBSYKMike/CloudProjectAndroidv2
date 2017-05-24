@@ -26,6 +26,13 @@ public class MainActivity extends AppCompatActivity {
         String userEmail = TemporaryStorage.getInstance().getLoggedInuserEmail();
         TextView textView=(TextView)findViewById(R.id.loginLabel);
         textView.setText("Logged in as:   " + userEmail);
+
+        System.out.println("User Settings:");
+        System.out.println("accelero:   " + TemporaryStorage.getInstance().getAcceleroMeterOnOff());
+        System.out.println("light:   " + TemporaryStorage.getInstance().getLightOnOff());
+        System.out.println("proximity;    " + TemporaryStorage.getInstance().getProximityOnoff());
+        System.out.println("sampling:    " + TemporaryStorage.getInstance().getSamplingRate());
+
     }
 
 

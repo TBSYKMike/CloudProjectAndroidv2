@@ -8,9 +8,10 @@ import java.util.ArrayList;
 
 class TemporaryStorage {
     private static final TemporaryStorage ourInstance = new TemporaryStorage();
-    private boolean accelerometerOnOff;
-    private boolean proximityOnOff;
-    private boolean lightOnOff;
+    String acceleroMeterOnOff;
+    String lightOnOff;
+    String proximityOnoff ;
+    String samplingRate;
     private boolean sensorStop;
     private String loggedInuserEmail;
 
@@ -47,5 +48,36 @@ class TemporaryStorage {
 
     public void setLoggedInuserEmail(String loggedInuserEmail) {
         this.loggedInuserEmail = loggedInuserEmail;
+    }
+
+    public String getLightOnOff() {
+        return lightOnOff;
+    }
+
+    public void setLightOnOff(String lightOnOff) {
+        this.lightOnOff = lightOnOff;
+    }
+
+    public String getProximityOnoff() {
+        return proximityOnoff;
+    }
+
+    public void setProximityOnoff(String proximityOnoff) {
+        this.proximityOnoff = proximityOnoff;
+    }
+
+    public String getSamplingRate() {
+        return samplingRate;
+    }
+
+    public void setSamplingRate(String samplingRate) {
+        this.samplingRate = samplingRate;
+    }
+    public String getAcceleroMeterOnOff() {
+        return acceleroMeterOnOff;
+    }
+
+    public void setAcceleroMeterOnOff(String acceleroMeterOnOff) {
+        this.acceleroMeterOnOff = acceleroMeterOnOff;
     }
 }

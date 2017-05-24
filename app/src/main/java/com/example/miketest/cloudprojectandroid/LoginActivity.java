@@ -125,6 +125,7 @@ public class LoginActivity extends Activity {
                             webView.loadUrl(url);
                             System.out.println("Logged in as:   " + email);
                             TemporaryStorage.getInstance().setLoggedInuserEmail(email);
+                            loadUserSettings();
                             Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(myIntent);
 
@@ -161,5 +162,18 @@ public class LoginActivity extends Activity {
             }
         }
         return certainCookie;
+    }
+
+    private void loadUserSettings(){
+        String accelerometerOnOff = findCertainCookie("AccelerometerOnoff");
+        String lightOnOff = findCertainCookie("LightOnOff");
+        String proximityOnoff = findCertainCookie("ProximityOnoff");
+        String samplingRate = findCertainCookie("SamplingRate");
+
+        TemporaryStorage.getInstance().setAcceleroMeterOnOff(accelerometerOnOff);
+        TemporaryStorage.getInstance().setLightOnOff(lightOnOff);
+        TemporaryStorage.getInstance().setProximityOnoff(proximityOnoff);
+        TemporaryStorage.getInstance().setSamplingRate(samplingRate);
+
     }
 }
