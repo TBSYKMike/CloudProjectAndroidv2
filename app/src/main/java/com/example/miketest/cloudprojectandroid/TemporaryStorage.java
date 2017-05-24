@@ -12,6 +12,7 @@ class TemporaryStorage {
     private boolean proximityOnOff;
     private boolean lightOnOff;
     private boolean sensorStop;
+    private String loggedInuserEmail;
 
     static TemporaryStorage getInstance() {
         return ourInstance;
@@ -38,5 +39,13 @@ class TemporaryStorage {
 
     public void setSensorStop(boolean sensorStop) {
         this.sensorStop = sensorStop;
+    }
+
+    public String getLoggedInuserEmail() {
+        return loggedInuserEmail;
+    }
+
+    public void setLoggedInuserEmail(String loggedInuserEmail) {
+        this.loggedInuserEmail = loggedInuserEmail;
     }
 }

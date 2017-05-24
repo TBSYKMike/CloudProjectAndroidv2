@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -21,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
       //  new WebServiceConnector().execute();
 
+        String userEmail = TemporaryStorage.getInstance().getLoggedInuserEmail();
+        TextView textView=(TextView)findViewById(R.id.loginLabel);
+        textView.setText("Logged in as:   " + userEmail);
     }
 
 
@@ -63,13 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonClicked(View view) {
-        Intent intent;
-
         switch (view.getId()) {
-           // case R.id.settingButton:
-             //   intent = new Intent(MainActivity.this, SettingActivity.class);
-               // startActivity(intent);
-               // break;
             case R.id.sensorStartButton:
                 initializeSpeechToText();
                 new SensorHandler(this).execute();
@@ -78,9 +77,14 @@ public class MainActivity extends AppCompatActivity {
                 //Upload to cloud
                 initializeSpeechToText();
                 break;
+            case R.id.logoutButton:
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                break;
         }
 
     }
+
 
 
 

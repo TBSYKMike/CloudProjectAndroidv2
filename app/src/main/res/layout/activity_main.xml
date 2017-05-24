@@ -28,6 +28,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="162dp"
+        android:onClick="buttonClicked"
         android:text="Start" />
 
     <Button
@@ -37,6 +38,25 @@
         android:layout_alignEnd="@+id/sensorStartButton"
         android:layout_below="@+id/sensorStartButton"
         android:layout_marginTop="69dp"
+        android:onClick="buttonClicked"
         android:text="Stop" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:onClick="buttonClicked"
+        android:text="Logout" />
+
+    <TextView
+        android:id="@+id/loginLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/logoutButton"
+        android:layout_marginBottom="13dp"
+        android:text="loginLabel"
+        android:layout_alignEnd="@+id/settingButton" />
 
 </RelativeLayout>

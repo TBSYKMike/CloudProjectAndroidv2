@@ -40,15 +40,11 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
         setContentView(R.layout.activity_login);
-
-
 /*
         mWebView = (WebView) findViewById(R.id.webView1);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.loadUrl("http://webapplication120170522065558.azurewebsites.net/");}}
 */
-
-
     }
 
     public void onLoginButtonPressed(View view) {
@@ -128,6 +124,7 @@ public class LoginActivity extends Activity {
                             webView.getSettings().setJavaScriptEnabled(true);
                             webView.loadUrl(url);
                             System.out.println("Logged in as:   " + email);
+                            TemporaryStorage.getInstance().setLoggedInuserEmail(email);
                             Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(myIntent);
 
