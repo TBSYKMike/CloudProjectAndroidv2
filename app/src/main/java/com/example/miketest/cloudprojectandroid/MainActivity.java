@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     String convertResult = speechConvertedToText.get(0); //Vi skickar bara upp detta till cloud så blir det lättare
                     Toast.makeText(getApplicationContext(), "To text   " + convertResult, Toast.LENGTH_SHORT).show();
                     System.out.println("To text   " + convertResult);
+                    TemporaryStorage.getInstance().addDataToArray("METAD", convertResult );
                 }
                 break;
             }
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     public void buttonClicked(View view) {
         switch (view.getId()) {
             case R.id.sensorStartButton:
+                TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement START" );
                 initializeSpeechToText();
                 TemporaryStorage.getInstance().setSensorStop(false);
                 new SensorHandler(this).execute();
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
                 initializeSpeechToText();
                 //Stop sensors
                 TemporaryStorage.getInstance().setSensorStop(true);
+
+                TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement STOP" );
                 //Upload to cloud
                 break;
             case R.id.logoutButton:

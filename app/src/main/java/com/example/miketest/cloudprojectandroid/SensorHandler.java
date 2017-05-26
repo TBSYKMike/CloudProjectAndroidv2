@@ -63,7 +63,13 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
+        if(TemporaryStorage.getInstance().isSensorStop()){
+            sensorManager.unregisterListener(this);
+            TemporaryStorage.getInstance().printArrayList();
+        }
+
+        else if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float xValue = sensorEvent.values[0];
             float yValue = sensorEvent.values[1];
             float zValue = sensorEvent.values[2];
@@ -102,10 +108,7 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             sensorFreqencySaved = sensorFrequency;
         }*/
 
-        if(TemporaryStorage.getInstance().isSensorStop()){
-            sensorManager.unregisterListener(this);
-            TemporaryStorage.getInstance().printArrayList();
-        }
+
 
 
     //    checkSensorStatus("accelerometerOnOff");
