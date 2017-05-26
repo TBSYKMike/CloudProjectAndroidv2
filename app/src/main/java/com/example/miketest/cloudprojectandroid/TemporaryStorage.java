@@ -30,7 +30,7 @@ class TemporaryStorage {
     public void printArrayList(){
         for (int i=0; i < ArrayOfSamplingData.size(); i++){
             System.out.println( ArrayOfSamplingData.get(i) );
-            //dataSortAndAddToDatabase( ArrayOfSamplingData.get(i) );
+            dataSortAndAddToDatabase( ArrayOfSamplingData.get(i) );
         }
     }
 
