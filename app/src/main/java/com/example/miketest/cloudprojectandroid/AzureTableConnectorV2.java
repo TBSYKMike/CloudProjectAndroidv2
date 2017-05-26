@@ -6,7 +6,6 @@ import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.table.CloudTable;
 import com.microsoft.azure.storage.table.CloudTableClient;
 import com.microsoft.azure.storage.table.TableBatchOperation;
-import com.microsoft.azure.storage.table.TableOperation;
 
 /**
  * Created by Henrik on 2017-05-05.
@@ -19,14 +18,11 @@ public class AzureTableConnectorV2 extends AsyncTask<String, Void, String> {
     private String value2 = "";
     private String value3 = "";
     private String timeNano = "";
+    TableBatchOperation batchOperation = null;
 
 
-    public AzureTableConnectorV2(String sensorType, String value1, String value2, String value3, String timeNano) {
-        this.sensorType = sensorType;
-        this.value1 = value1;
-        this.value2 = value2;
-        this.value3 = value3;
-        this.timeNano = timeNano;
+    public AzureTableConnectorV2(TableBatchOperation batchOperation) {
+        this.batchOperation = batchOperation;
     }
 
     @Override
@@ -99,20 +95,15 @@ public class AzureTableConnectorV2 extends AsyncTask<String, Void, String> {
                 System.out.println(table);
             }
 */
-            TableBatchOperation batchOperation = new TableBatchOperation();
+            //TableBatchOperation batchOperation = new TableBatchOperation();
 
 
 
-            // Create a new customer entity.
-            SensorEntity sensor1 = inputRightSensorData(sensorType, value1, value2, value3 , timeNano);
-
-            // Create an operation to add the new customer to the people table.
-            TableOperation insertCustomer1 = TableOperation.insertOrReplace(sensor1);
 
 
 
             // Submit the operation to the table service.
-            cloudTable.execute(insertCustomer1);
+            cloudTable.execute(batchOperation);
 
 
 

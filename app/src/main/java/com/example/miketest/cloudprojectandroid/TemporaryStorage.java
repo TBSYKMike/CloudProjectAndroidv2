@@ -1,5 +1,7 @@
 package com.example.miketest.cloudprojectandroid;
 
+import com.microsoft.azure.storage.table.TableBatchOperation;
+
 import java.util.ArrayList;
 
 /**
@@ -28,12 +30,24 @@ class TemporaryStorage {
     }
 
     public void printArrayList(){
-        for (int i=0; i < ArrayOfSamplingData.size(); i++){
-            System.out.println( ArrayOfSamplingData.get(i) );
-            dataSortAndAddToDatabase( ArrayOfSamplingData.get(i) );
+        batchOperation = new TableBatchOperation();
+
+        for (int i=0; i < ArrayOfSamplingData.size(); i++) {
+            System.out.println(ArrayOfSamplingData.get(i));
+            dataSortAndAddToDatabaseV2(ArrayOfSamplingData.get(i));
+            if (batchOperation.size() > 90 ) {
+                new AzureTableConnectorV2( batchOperation ).execute();
+                batchOperation = new TableBatchOperation();
+            }
         }
+        if (batchOperation.size() > 0 ) {
+            new AzureTableConnectorV2( batchOperation ).execute();
+            batchOperation = new TableBatchOperation();
+        }
+
     }
 
+    private TableBatchOperation batchOperation;
 
     private void dataSortAndAddToDatabase(String rowOfData){
         String[] splitedData = rowOfData.split(";;");
@@ -57,6 +71,61 @@ class TemporaryStorage {
         }
 
 
+    }
+
+    private void dataSortAndAddToDatabaseV2(String rowOfData){
+        String[] splitedData = rowOfData.split(";;");
+        String nanoTime = splitedData[2];
+
+
+
+        if(splitedData[0].equals("ACCEL")){
+            String[] values = splitedData[1].split(",");
+            batchOperation.insertOrReplace( inputRightSensorData("accelerometer", values[0], values[1], values[2], nanoTime ) );
+
+        }
+        else if(splitedData[0].equals("LIGHT")){
+            batchOperation.insertOrReplace( inputRightSensorData("lightsensor", splitedData[1], null, null, nanoTime ) );
+        }
+        else if(splitedData[0].equals("PROXI")){
+            batchOperation.insertOrReplace( inputRightSensorData("proximitysensor", splitedData[1], null, null, nanoTime ) );
+        }
+        else if(splitedData[0].equals("METAD")){
+            batchOperation.insertOrReplace( inputRightSensorData("metadata", splitedData[1], null, null, nanoTime ) );
+        }
+        else if(splitedData[0].equals("BATRY")){
+            batchOperation.insertOrReplace( inputRightSensorData("batterylevel", splitedData[1], null, null, nanoTime ) );
+        }
+
+
+    }
+
+    private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3, String timeNano){
+        SensorEntity sensor1 = new SensorEntity("1",  "user1"+";"+timeNano );
+        if (sensorType.equals("accelerometer")) {
+            sensor1.setSensorAccelerometerX(value1);
+            sensor1.setSensorAccelerometerY(value2);
+            sensor1.setSensorAccelerometerZ(value3);
+        }
+        else if (sensorType.equals("lightsensor")) {
+            sensor1.setSensorLight(value1);
+        }
+        else if (sensorType.equals("proximitysensor")) {
+            sensor1.setSensorProximity(value1);
+        }
+        else if (sensorType.equals("metadata")) {
+            sensor1.setMETAData(value1);
+        }
+        else if (sensorType.equals("batterylevel")) {
+            sensor1.setBatteryLevel(value1);
+        }
+        else if (sensorType.equals("New Sensor Name")) {
+            // Example for adding new sensors for future messurments
+            // sensor1.getSensorPlaceholder1(value1);
+        }
+
+
+        return sensor1;
     }
 
 
