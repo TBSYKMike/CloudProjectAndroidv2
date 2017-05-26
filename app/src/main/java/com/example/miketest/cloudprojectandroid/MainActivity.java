@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -70,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onResume() {
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+
+
         super.onResume();
     }
 

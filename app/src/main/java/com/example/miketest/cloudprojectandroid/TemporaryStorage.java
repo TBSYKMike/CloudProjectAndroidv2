@@ -2,7 +2,9 @@ package com.example.miketest.cloudprojectandroid;
 
 import com.microsoft.azure.storage.table.TableBatchOperation;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Mike on 2017-05-17.
@@ -25,8 +27,9 @@ class TemporaryStorage {
     private ArrayList <String> ArrayOfSamplingData = new ArrayList<>();
 
     public void addDataToArray(String SensorName, String SensorData){
-        String newSamplingData = ""+SensorName+";;"+SensorData+";;"+System.nanoTime();
+        String newSamplingData = ""+SensorName+";;"+SensorData+";;"+getCurrentTimeStamp();
         ArrayOfSamplingData.add(newSamplingData);
+        System.out.println(getCurrentTimeStamp());
     }
 
     public void printArrayList(){
@@ -45,6 +48,10 @@ class TemporaryStorage {
             batchOperation = new TableBatchOperation();
         }
 
+    }
+
+    public String getCurrentTimeStamp() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
     }
 
     private TableBatchOperation batchOperation;

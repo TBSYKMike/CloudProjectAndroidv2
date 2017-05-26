@@ -10,6 +10,9 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static android.content.Context.SENSOR_SERVICE;
 
 /**
@@ -60,9 +63,14 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     }
 
 
+    public String getCurrentTimeStamp() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+    }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+
+
 
         if(TemporaryStorage.getInstance().isSensorStop()){
             sensorManager.unregisterListener(this);
