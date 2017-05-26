@@ -5,13 +5,14 @@ import android.os.AsyncTask;
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.table.CloudTable;
 import com.microsoft.azure.storage.table.CloudTableClient;
+import com.microsoft.azure.storage.table.TableBatchOperation;
 import com.microsoft.azure.storage.table.TableOperation;
 
 /**
  * Created by Henrik on 2017-05-05.
  */
 
-public class AzureTableConnector extends AsyncTask<String, Void, String> {
+public class AzureTableConnectorV2 extends AsyncTask<String, Void, String> {
 
     private String sensorType = "";
     private String value1 = "";
@@ -20,7 +21,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
     private String timeNano = "";
 
 
-    public AzureTableConnector(String sensorType, String value1, String value2, String value3, String timeNano) {
+    public AzureTableConnectorV2(String sensorType, String value1, String value2, String value3, String timeNano) {
         this.sensorType = sensorType;
         this.value1 = value1;
         this.value2 = value2;
@@ -44,7 +45,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
     }
 
     private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3, String timeNano){
-        SensorEntity sensor1 = new SensorEntity("1",  "user1"+";"+timeNano );
+        SensorEntity sensor1 = new SensorEntity("1",  "user1"+";;"+timeNano );
         if (sensorType.equals("accelerometer")) {
             sensor1.setSensorAccelerometerX(value1);
             sensor1.setSensorAccelerometerY(value2);
@@ -98,7 +99,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
                 System.out.println(table);
             }
 */
-
+            TableBatchOperation batchOperation = new TableBatchOperation();
 
 
 
@@ -107,6 +108,8 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
 
             // Create an operation to add the new customer to the people table.
             TableOperation insertCustomer1 = TableOperation.insertOrReplace(sensor1);
+
+
 
             // Submit the operation to the table service.
             cloudTable.execute(insertCustomer1);
