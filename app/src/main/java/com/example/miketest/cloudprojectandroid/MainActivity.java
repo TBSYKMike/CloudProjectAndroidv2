@@ -82,11 +82,13 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.sensorStartButton:
                 initializeSpeechToText();
+                TemporaryStorage.getInstance().setSensorStop(false);
                 new SensorHandler(this).execute();
                 break;
             case R.id.sensorStopButton:
                 initializeSpeechToText();
                 //Stop sensors
+                TemporaryStorage.getInstance().setSensorStop(true);
                 //Upload to cloud
                 break;
             case R.id.logoutButton:

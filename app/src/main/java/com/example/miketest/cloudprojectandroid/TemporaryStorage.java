@@ -30,12 +30,12 @@ class TemporaryStorage {
     public void printArrayList(){
         for (int i=0; i < ArrayOfSamplingData.size(); i++){
             System.out.println( ArrayOfSamplingData.get(i) );
-            dataSortAndAdd( ArrayOfSamplingData.get(i) );
+            //dataSortAndAddToDatabase( ArrayOfSamplingData.get(i) );
         }
     }
 
 
-    private void dataSortAndAdd(String rowOfData){
+    private void dataSortAndAddToDatabase(String rowOfData){
         String[] splitedData = rowOfData.split(";;");
         String nanoTime = splitedData[2];
 
@@ -51,6 +51,9 @@ class TemporaryStorage {
         }
         else if(splitedData[0].equals("METAD")){
             new AzureTableConnector("metadata", splitedData[1], null, null, nanoTime ).execute();
+        }
+        else if(splitedData[0].equals("BATRY")){
+            new AzureTableConnector("batterylevel", splitedData[1], null, null, nanoTime ).execute();
         }
 
 

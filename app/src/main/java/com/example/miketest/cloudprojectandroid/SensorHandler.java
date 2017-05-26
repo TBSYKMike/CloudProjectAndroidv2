@@ -29,6 +29,23 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         this.context = context;
     }
 
+    /**
+     * <p>Applications should preferably override {@link #onCancelled(Object)}.
+     * This method is invoked by the default implementation of
+     * {@link #onCancelled(Object)}.</p>
+     * <p>
+     * <p>Runs on the UI thread after {@link #cancel(boolean)} is invoked and
+     * {@link #doInBackground(Object[])} has finished.</p>
+     *
+     * @see #onCancelled(Object)
+     * @see #cancel(boolean)
+     * @see #isCancelled()
+     */
+    @Override
+    protected void onCancelled() {
+
+        super.onCancelled();
+    }
 
     @Override
     protected String doInBackground(String... params) {
@@ -41,6 +58,8 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     protected void onPostExecute(String result) {
 
     }
+
+
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -64,11 +83,12 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             System.out.println("Light sensor value " + sensorEvent.values[0]);
             TemporaryStorage.getInstance().addDataToArray("LIGHT",""+sensorEvent.values[0]);
            // new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
+            checkBatteryLevel();
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             System.out.println("Proximity sensor value " + sensorEvent.values[0]);
             TemporaryStorage.getInstance().addDataToArray("PROXI",""+sensorEvent.values[0]);
          //   new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
-            checkBatteryLevel();
+
 
         }
 
@@ -84,6 +104,7 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
         if(TemporaryStorage.getInstance().isSensorStop()){
             sensorManager.unregisterListener(this);
+            TemporaryStorage.getInstance().printArrayList();
         }
 
 
@@ -167,6 +188,8 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         int scale = batteryCurrentStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
         float batteryPercentLeft = level / (float) scale;
         System.out.println("Battery level is:   " + batteryPercentLeft);
+
+        TemporaryStorage.getInstance().addDataToArray("BATRY",""+batteryPercentLeft);
 
 
         System.out.println("USAGE:   " + sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).getPower());

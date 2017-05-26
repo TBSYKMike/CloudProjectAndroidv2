@@ -22,6 +22,7 @@ public class SensorEntity extends TableServiceEntity{
     private String SensorLight;
     private String SensorProximity;
     private String METAData;
+    private String BatteryLevel;
     private String SensorPlaceholder1;
     private String SensorPlaceholder2;
     private String SensorPlaceholder3;
@@ -79,6 +80,14 @@ public class SensorEntity extends TableServiceEntity{
 
     public void setMETAData(String METAData) {
         this.METAData = METAData;
+    }
+
+    public String getBatteryLevel() {
+        return BatteryLevel;
+    }
+
+    public void setBatteryLevel(String batteryLevel) {
+        BatteryLevel = batteryLevel;
     }
 
     public String getSensorPlaceholder1() {

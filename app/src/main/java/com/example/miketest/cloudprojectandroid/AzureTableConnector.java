@@ -59,6 +59,9 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
         else if (sensorType.equals("metadata")) {
             sensor1.setMETAData(value1);
         }
+        else if (sensorType.equals("batterylevel")) {
+            sensor1.setBatteryLevel(value1);
+        }
         else if (sensorType.equals("New Sensor Name")) {
             // Example for adding new sensors for future messurments
             // sensor1.getSensorPlaceholder1(value1);
