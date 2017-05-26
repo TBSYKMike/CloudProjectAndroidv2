@@ -23,9 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
       //  new WebServiceConnector().execute();
 
-        String userEmail = TemporaryStorage.getInstance().getLoggedInuserEmail();
-        TextView textView=(TextView)findViewById(R.id.loginLabel);
-        textView.setText("Logged in as:   " + userEmail);
+        setUserLabel();
 
         System.out.println("User Settings:");
         System.out.println("accelero:   " + TemporaryStorage.getInstance().getAcceleroMeterOnOff());
@@ -33,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("proximity;    " + TemporaryStorage.getInstance().getProximityOnoff());
         System.out.println("sampling:    " + TemporaryStorage.getInstance().getSamplingRate());
 
+    }
+
+    private void setUserLabel(){
+        String userEmail = TemporaryStorage.getInstance().getLoggedInuserEmail();
+        TextView textView=(TextView)findViewById(R.id.loginLabel);
+        textView.setText("Logged in as:   " + userEmail);
     }
 
 
@@ -81,8 +85,9 @@ public class MainActivity extends AppCompatActivity {
                 new SensorHandler(this).execute();
                 break;
             case R.id.sensorStopButton:
-                //Upload to cloud
                 initializeSpeechToText();
+                //Stop sensors
+                //Upload to cloud
                 break;
             case R.id.logoutButton:
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);

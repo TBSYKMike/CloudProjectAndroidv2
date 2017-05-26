@@ -22,7 +22,6 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     private float accelerationValue = 0.00f;
     private Context context;
     private SensorManager sensorManager;
-//    private int sensorFreqencySaved = 10000;
 
 
 
@@ -34,7 +33,7 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     @Override
     protected String doInBackground(String... params) {
         System.out.println("SensorHandler");
-        setUpSensors(10000);
+        setUpSensors();
         return null;
     }
 
@@ -128,11 +127,26 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     }
 
 
-    private void setUpSensors(int sensorDelayMicroseconds) {
+    private void setUpSensors() {
         sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelayMicroseconds );
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelayMicroseconds);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorDelayMicroseconds );
+
+        int sensorDelay = 0;
+        if(TemporaryStorage.getInstance().getSamplingRate().equals(1))
+            sensorDelay =  SensorManager.SENSOR_DELAY_NORMAL;
+        else if(TemporaryStorage.getInstance().getSamplingRate().equals(2))
+            sensorDelay =  SensorManager.SENSOR_DELAY_GAME;
+        else if(TemporaryStorage.getInstance().getSamplingRate().equals(3))
+            sensorDelay =  SensorManager.SENSOR_DELAY_FASTEST;
+
+        if(TemporaryStorage.getInstance().getAcceleroMeterOnOff().equals(1))
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelay);
+
+        if(TemporaryStorage.getInstance().getProximityOnoff().equals(1))
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorDelay);
+
+        if(TemporaryStorage.getInstance().getLightOnOff().equals(1))
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
+
     }
 
     private void checkBatteryLevel() {
