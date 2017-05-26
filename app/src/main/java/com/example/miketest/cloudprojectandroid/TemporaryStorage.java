@@ -19,6 +19,49 @@ class TemporaryStorage {
         return ourInstance;
     }
 
+    // Storing all Sampling data
+    private ArrayList <String> ArrayOfSamplingData = new ArrayList<>();
+
+    public void addDataToArray(String SensorName, String SensorData){
+        String newSamplingData = ""+SensorName+";;"+SensorData+";;"+System.nanoTime();
+        ArrayOfSamplingData.add(newSamplingData);
+    }
+
+    public void printArrayList(){
+        for (int i=0; i < ArrayOfSamplingData.size(); i++){
+            System.out.println( ArrayOfSamplingData.get(i) );
+            dataSortAndAdd( ArrayOfSamplingData.get(i) );
+        }
+    }
+
+
+    private void dataSortAndAdd(String rowOfData){
+        String[] splitedData = rowOfData.split(";;");
+        String nanoTime = splitedData[2];
+
+        if(splitedData[0].equals("ACCEL")){
+            String[] values = splitedData[1].split(",");
+            new AzureTableConnector("accelerometer", values[0], values[1], values[2], nanoTime ).execute();
+        }
+        else if(splitedData[0].equals("LIGHT")){
+            new AzureTableConnector("lightsensor", splitedData[1], null, null, nanoTime ).execute();
+        }
+        else if(splitedData[0].equals("PROXI")){
+            new AzureTableConnector("proximitysensor", splitedData[1], null, null, nanoTime ).execute();
+        }
+        else if(splitedData[0].equals("METAD")){
+            new AzureTableConnector("metadata", splitedData[1], null, null, nanoTime ).execute();
+        }
+
+
+    }
+
+
+
+
+
+
+
 
     public TemporaryStorage() {
         if(storage001 == null) {

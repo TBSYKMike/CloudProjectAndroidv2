@@ -17,13 +17,15 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
     private String value1 = "";
     private String value2 = "";
     private String value3 = "";
+    private String timeNano = "";
 
 
-    public AzureTableConnector(String sensorType, String value1, String value2, String value3) {
+    public AzureTableConnector(String sensorType, String value1, String value2, String value3, String timeNano) {
         this.sensorType = sensorType;
         this.value1 = value1;
         this.value2 = value2;
         this.value3 = value3;
+        this.timeNano = timeNano;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
 
         // params[0] is for the type of sensor
         // params[1-3] is for the value from the sensor
-        cloudTest(sensorType, value1, value2, value3);
+        cloudTest(sensorType, value1, value2, value3, timeNano);
         return "Download failed";
     }
 
@@ -41,8 +43,8 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
 
     }
 
-    private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3){
-        SensorEntity sensor1 = new SensorEntity("User1",  Long.toString( System.nanoTime() ) );
+    private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3, String timeNano){
+        SensorEntity sensor1 = new SensorEntity("1",  "user1"+";;"+timeNano );
         if (sensorType.equals("accelerometer")) {
             sensor1.setSensorAccelerometerX(value1);
             sensor1.setSensorAccelerometerY(value2);
@@ -54,6 +56,9 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
         else if (sensorType.equals("proximitysensor")) {
             sensor1.setSensorProximity(value1);
         }
+        else if (sensorType.equals("metadata")) {
+            sensor1.setMETAData(value1);
+        }
         else if (sensorType.equals("New Sensor Name")) {
             // Example for adding new sensors for future messurments
             // sensor1.getSensorPlaceholder1(value1);
@@ -63,7 +68,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
         return sensor1;
     }
 
-    private void cloudTest(String sensorType, String value1, String value2, String value3) {
+    private void cloudTest(String sensorType, String value1, String value2, String value3, String timeNano) {
 
         System.out.println("cloud begin");
         String storageConnectionString =
@@ -95,7 +100,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
 
 
             // Create a new customer entity.
-            SensorEntity sensor1 = inputRightSensorData(sensorType, value1, value2, value3 );
+            SensorEntity sensor1 = inputRightSensorData(sensorType, value1, value2, value3 , timeNano);
 
             // Create an operation to add the new customer to the people table.
             TableOperation insertCustomer1 = TableOperation.insertOrReplace(sensor1);

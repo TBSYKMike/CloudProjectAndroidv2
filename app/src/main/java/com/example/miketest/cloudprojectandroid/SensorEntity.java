@@ -21,6 +21,7 @@ public class SensorEntity extends TableServiceEntity{
     private String SensorAccelerometerZ;
     private String SensorLight;
     private String SensorProximity;
+    private String METAData;
     private String SensorPlaceholder1;
     private String SensorPlaceholder2;
     private String SensorPlaceholder3;
@@ -70,6 +71,14 @@ public class SensorEntity extends TableServiceEntity{
 
     public void setSensorProximity(String sensorProximity) {
         SensorProximity = sensorProximity;
+    }
+
+    public String getMETAData() {
+        return METAData;
+    }
+
+    public void setMETAData(String METAData) {
+        this.METAData = METAData;
     }
 
     public String getSensorPlaceholder1() {
