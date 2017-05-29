@@ -32,9 +32,36 @@ class TemporaryStorage {
         System.out.println(getCurrentTimeStamp());
     }
 
+    private boolean runOnce = true;
+    public void autoUpload(){
+        // metod fungerar ej. nuvarande metod leder till java.lang.IllegalArgumentException: Cannot execute an empty batch operation.
+        if (ArrayOfSamplingData.size() > 100) {
+            System.out.println("autoUpload");
+            if (runOnce) {
+                runOnce = false;
+
+                for (int i=0; i<50; i++){
+                    dataSortAndAddToDatabaseV2(ArrayOfSamplingData.get(0));
+                    ArrayOfSamplingData.remove(0);
+                    if (batchOperation.size() >= 50 ) {
+                        new AzureTableConnectorV2( batchOperation ).execute();
+                        batchOperation.clear();
+                    }
+                }
+          /*     if (batchOperation.size() > 0 ) {
+                    new AzureTableConnectorV2( batchOperation ).execute();
+                    batchOperation = new TableBatchOperation();
+                }
+*/
+                runOnce = true;
+
+            }
+        }
+    }
+
     public void printArrayList(){
         batchOperation = new TableBatchOperation();
-
+/*
         for (int i=0; i < ArrayOfSamplingData.size(); i++) {
             //System.out.println(ArrayOfSamplingData.get(i));
             dataSortAndAddToDatabaseV2(ArrayOfSamplingData.get(i));
@@ -48,16 +75,31 @@ class TemporaryStorage {
             new AzureTableConnectorV2( batchOperation ).execute();
             batchOperation = new TableBatchOperation();
         }
+*/
+
+        while(ArrayOfSamplingData.size() > 0){
+            dataSortAndAddToDatabaseV2(ArrayOfSamplingData.get(0));
+            ArrayOfSamplingData.remove(0);
+            if (batchOperation.size() > 50 ) {
+                new AzureTableConnectorV2( batchOperation ).execute();
+                batchOperation.clear();
+            }
+        }
+        if (batchOperation.size() > 0 ) {
+            new AzureTableConnectorV2( batchOperation ).execute();
+            batchOperation = new TableBatchOperation();
+        }
 
 
-        ArrayOfSamplingData.clear();
+
+        //ArrayOfSamplingData.clear();
     }
 
     public String getCurrentTimeStamp() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
     }
 
-    private TableBatchOperation batchOperation;
+    private TableBatchOperation batchOperation = new TableBatchOperation();;
 
     private void dataSortAndAddToDatabase(String rowOfData){
         String[] splitedData = rowOfData.split(";;");

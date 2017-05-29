@@ -67,9 +67,16 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
     }
 
+    private long delayMili = 500; // set delay in milliseconds
+    private long sensor1Time = System.currentTimeMillis();
+    private long sensor2Time = System.currentTimeMillis();
+    private long sensor3Time = System.currentTimeMillis();
+
+
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
+        //TemporaryStorage.getInstance().autoUpload();
 
 
         if(TemporaryStorage.getInstance().isSensorStop()){
@@ -77,7 +84,10 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             TemporaryStorage.getInstance().printArrayList();
         }
 
-        else if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        else if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && (System.currentTimeMillis()-sensor1Time) > delayMili) {
+
+            sensor1Time = System.currentTimeMillis();
+
             float xValue = sensorEvent.values[0];
             float yValue = sensorEvent.values[1];
             float zValue = sensorEvent.values[2];
@@ -93,12 +103,15 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
                 //TemporaryStorage.getInstance().printArrayList();
             }
-        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT && (System.currentTimeMillis()-sensor2Time) > delayMili) {
+                sensor2Time = System.currentTimeMillis();
+
             System.out.println("Light sensor value " + sensorEvent.values[0]);
             TemporaryStorage.getInstance().addDataToArray("LIGHT",""+sensorEvent.values[0]);
            // new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
             checkBatteryLevel();
-        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY && (System.currentTimeMillis()-sensor3Time) > delayMili) {
+            sensor3Time = System.currentTimeMillis();
             System.out.println("Proximity sensor value " + sensorEvent.values[0]);
             TemporaryStorage.getInstance().addDataToArray("PROXI",""+sensorEvent.values[0]);
          //   new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
@@ -166,17 +179,19 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
 
     private void setUpSensors() {
-        sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
 
-        int sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;;
-        if ( TemporaryStorage.getInstance().getSamplingRate() != null) {
-            if (TemporaryStorage.getInstance().getSamplingRate().equals(1))
-                sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
-            else if (TemporaryStorage.getInstance().getSamplingRate().equals(2))
-                sensorDelay = SensorManager.SENSOR_DELAY_GAME;
-            else if (TemporaryStorage.getInstance().getSamplingRate().equals(3))
-                sensorDelay = SensorManager.SENSOR_DELAY_FASTEST;
-        }
+            sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+
+            int sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
+            ;
+            if (TemporaryStorage.getInstance().getSamplingRate() != null) {
+                if (TemporaryStorage.getInstance().getSamplingRate().equals(1))
+                    sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
+                else if (TemporaryStorage.getInstance().getSamplingRate().equals(2))
+                    sensorDelay = SensorManager.SENSOR_DELAY_GAME;
+                else if (TemporaryStorage.getInstance().getSamplingRate().equals(3))
+                    sensorDelay = SensorManager.SENSOR_DELAY_FASTEST;
+            }
 /*
         if(TemporaryStorage.getInstance().getAcceleroMeterOnOff().equals(1))
             sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelay);
@@ -187,9 +202,10 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         if(TemporaryStorage.getInstance().getLightOnOff().equals(1))
             sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
 */
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelay);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), 0);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelay);
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorDelay);
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
+
     }
 
     private void checkBatteryLevel() {
@@ -203,9 +219,10 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         TemporaryStorage.getInstance().addDataToArray("BATRY",""+batteryPercentLeft);
 
 
-        System.out.println("USAGE:   " + sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).getPower());
+    /*    System.out.println("USAGE:   " + sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).getPower());
         System.out.println("USAGE light:   " + sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT).getPower());
         System.out.println("USAGE prox:   " + sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY).getPower());
+    */
     }
 
 

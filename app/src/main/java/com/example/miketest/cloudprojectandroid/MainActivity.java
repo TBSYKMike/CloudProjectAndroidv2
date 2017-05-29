@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("sampling:    " + TemporaryStorage.getInstance().getSamplingRate());
 
         buttonRecord = (Button) findViewById( R.id.buttonRecord );
-        buttonStart = (Button) findViewById( R.id.sensorStopButton );
+        buttonStart = (Button) findViewById( R.id.sensorStartButton );
         buttonStop = (Button) findViewById( R.id.sensorStopButton );
 
         buttonRecord.setEnabled(true);
@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 initializeSpeechToText();
                 TemporaryStorage.getInstance().setSensorStop(false);
                 new SensorHandler(this).execute();
+                buttonStart.setEnabled(false);
+                buttonStop.setEnabled(true);
                 break;
             case R.id.sensorStopButton:
                 initializeSpeechToText();
@@ -113,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
                 TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement STOP" );
                 //Upload to cloud
+                buttonStart.setEnabled(true);
+                buttonStop.setEnabled(false);
                 break;
             case R.id.logoutButton:
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
