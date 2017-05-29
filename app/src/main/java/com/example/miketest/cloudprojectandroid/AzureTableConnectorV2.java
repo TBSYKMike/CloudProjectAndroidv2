@@ -18,7 +18,7 @@ public class AzureTableConnectorV2 extends AsyncTask<String, Void, String> {
     private String value2 = "";
     private String value3 = "";
     private String timeNano = "";
-    TableBatchOperation batchOperation = null;
+    TableBatchOperation batchOperation;
 
 
     public AzureTableConnectorV2(TableBatchOperation batchOperation) {
@@ -28,7 +28,7 @@ public class AzureTableConnectorV2 extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         // we use the OkHttp library from https://github.com/square/okhttp
-
+        TemporaryStorage.getInstance().cloudQueueStarted();
         // params[0] is for the type of sensor
         // params[1-3] is for the value from the sensor
         cloudTest(sensorType, value1, value2, value3, timeNano);
@@ -106,7 +106,7 @@ public class AzureTableConnectorV2 extends AsyncTask<String, Void, String> {
             cloudTable.execute(batchOperation);
 
 
-
+            TemporaryStorage.getInstance().cloudQueueFinished();
 
 
 

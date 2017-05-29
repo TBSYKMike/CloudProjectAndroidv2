@@ -68,6 +68,7 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     }
 
     private long delayMili = 500; // set delay in milliseconds
+    private long battery0Time = System.currentTimeMillis();
     private long sensor1Time = System.currentTimeMillis();
     private long sensor2Time = System.currentTimeMillis();
     private long sensor3Time = System.currentTimeMillis();
@@ -79,13 +80,13 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         //TemporaryStorage.getInstance().autoUpload();
 
 
+
         if(TemporaryStorage.getInstance().isSensorStop()){
             sensorManager.unregisterListener(this);
             TemporaryStorage.getInstance().printArrayList();
+            return;
         }
-
         else if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && (System.currentTimeMillis()-sensor1Time) > delayMili) {
-
             sensor1Time = System.currentTimeMillis();
 
             float xValue = sensorEvent.values[0];
@@ -109,16 +110,16 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
             System.out.println("Light sensor value " + sensorEvent.values[0]);
             TemporaryStorage.getInstance().addDataToArray("LIGHT",""+sensorEvent.values[0]);
            // new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
-            checkBatteryLevel();
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY && (System.currentTimeMillis()-sensor3Time) > delayMili) {
             sensor3Time = System.currentTimeMillis();
             System.out.println("Proximity sensor value " + sensorEvent.values[0]);
             TemporaryStorage.getInstance().addDataToArray("PROXI",""+sensorEvent.values[0]);
          //   new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
-
-
         }
-
+        if ( (System.currentTimeMillis()-battery0Time) > delayMili ) {
+            battery0Time = System.currentTimeMillis();
+            checkBatteryLevel();
+        }
         /* SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int sensorFrequency = prefs.getInt("sensorFrequency", 10000);
         System.out.println("new value  " + sensorFrequency);

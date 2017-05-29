@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:screenOrientation="portrait"
     tools:context="com.example.miketest.cloudprojectandroid.MainActivity">
 
     <Button
@@ -19,7 +20,8 @@
         android:layout_marginBottom="17dp"
         android:layout_marginEnd="11dp"
         android:onClick="buttonClicked"
-        android:text="Settings" />
+        android:text="Settings"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/sensorStartButton"
@@ -67,5 +69,12 @@
         android:layout_toEndOf="@+id/sensorStartButton"
         android:onClick="buttonClicked"
         android:text="Record" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

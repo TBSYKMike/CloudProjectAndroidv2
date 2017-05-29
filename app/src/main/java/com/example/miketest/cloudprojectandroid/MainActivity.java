@@ -4,6 +4,7 @@ package com.example.miketest.cloudprojectandroid;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -19,8 +20,10 @@ public class MainActivity extends AppCompatActivity {
     private final int SPEECH_RECOGNITION_CODE = 1;
 
     public Button buttonRecord;
-    Button buttonStart;
-    Button buttonStop;
+    public Button buttonStart;
+    public Button buttonStop;
+
+    public TextView textViewStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +42,14 @@ public class MainActivity extends AppCompatActivity {
         buttonRecord = (Button) findViewById( R.id.buttonRecord );
         buttonStart = (Button) findViewById( R.id.sensorStartButton );
         buttonStop = (Button) findViewById( R.id.sensorStopButton );
+        textViewStatus = (TextView) findViewById(R.id.textViewStatus);
 
-        buttonRecord.setEnabled(true);
+        buttonRecord.setEnabled(false);
         buttonStart.setEnabled(true);
         buttonStop.setEnabled(false);
+
+
+
 
     }
 
@@ -75,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     String convertResult = speechConvertedToText.get(0); //Vi skickar bara upp detta till cloud så blir det lättare
                     Toast.makeText(getApplicationContext(), "To text   " + convertResult, Toast.LENGTH_SHORT).show();
                     System.out.println("To text   " + convertResult);
-                    TemporaryStorage.getInstance().addDataToArray("METAD", convertResult );
+                    TemporaryStorage.getInstance().addDataToArray("METAD", "Voice: "+convertResult );
                 }
                 break;
             }
@@ -105,18 +112,48 @@ public class MainActivity extends AppCompatActivity {
                 initializeSpeechToText();
                 TemporaryStorage.getInstance().setSensorStop(false);
                 new SensorHandler(this).execute();
+
+                buttonRecord.setEnabled(true);
                 buttonStart.setEnabled(false);
                 buttonStop.setEnabled(true);
+                textViewStatus.setText("Measurement Ongoing");
                 break;
             case R.id.sensorStopButton:
-                initializeSpeechToText();
                 //Stop sensors
                 TemporaryStorage.getInstance().setSensorStop(true);
 
                 TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement STOP" );
                 //Upload to cloud
-                buttonStart.setEnabled(true);
+                buttonRecord.setEnabled(false);
+                buttonStart.setEnabled(false);
                 buttonStop.setEnabled(false);
+                textViewStatus.setText("Uploading to Cloud");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while (TemporaryStorage.getInstance().cloudQueueUploading()) {
+                                    System.out.println(TemporaryStorage.getInstance().cloudQueueUploading());
+                                    try {
+                                        Thread.sleep(500);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                buttonRecord.setEnabled(false);
+                                buttonStart.setEnabled(true);
+                                buttonStop.setEnabled(false);
+                                textViewStatus.setText("Upload Finished");
+                            }
+                        });
+
+
+                    }
+                }, 1000);
+
+
                 break;
             case R.id.logoutButton:
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
