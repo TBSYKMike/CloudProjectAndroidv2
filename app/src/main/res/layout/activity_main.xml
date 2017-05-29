@@ -56,10 +56,10 @@
         android:id="@+id/loginLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/logoutButton"
-        android:layout_marginBottom="13dp"
         android:text="loginLabel"
-        android:layout_alignEnd="@+id/settingButton" />
+        android:layout_alignBaseline="@+id/logoutButton"
+        android:layout_alignBottom="@+id/logoutButton"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/buttonRecord"
@@ -76,5 +76,22 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/textViewTimeStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="timestop"
+        android:layout_below="@+id/textViewTimeStart"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/textViewTimeStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="timestart"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/sensorStopButton"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

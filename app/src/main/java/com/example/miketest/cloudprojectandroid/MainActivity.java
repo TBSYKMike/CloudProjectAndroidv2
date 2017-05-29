@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     public Button buttonStop;
 
     public TextView textViewStatus;
+    public TextView textViewTimeStart;
+    public TextView textViewTimeStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +45,15 @@ public class MainActivity extends AppCompatActivity {
         buttonStart = (Button) findViewById( R.id.sensorStartButton );
         buttonStop = (Button) findViewById( R.id.sensorStopButton );
         textViewStatus = (TextView) findViewById(R.id.textViewStatus);
+        textViewTimeStart = (TextView) findViewById(R.id.textViewTimeStart);
+        textViewTimeStop = (TextView) findViewById(R.id.textViewTimeStop);
 
         buttonRecord.setEnabled(false);
         buttonStart.setEnabled(true);
         buttonStop.setEnabled(false);
 
-
+        textViewTimeStart.setText("TimeStart: ");
+        textViewTimeStop.setText(" :TimeStop");
 
 
     }
@@ -117,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
                 buttonStart.setEnabled(false);
                 buttonStop.setEnabled(true);
                 textViewStatus.setText("Measurement Ongoing");
+                textViewTimeStart.setText("TimeStart: " + TemporaryStorage.getInstance().getCurrentTimeStamp());
+                textViewTimeStop.setText(" :TimeStop");
                 break;
             case R.id.sensorStopButton:
                 //Stop sensors
@@ -128,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 buttonStart.setEnabled(false);
                 buttonStop.setEnabled(false);
                 textViewStatus.setText("Uploading to Cloud");
+                //textViewTimeStart.setText("TimeStart: " + TemporaryStorage.getInstance().getCurrentTimeStamp());
+                textViewTimeStop.setText(TemporaryStorage.getInstance().getCurrentTimeStamp() + " :TimeStop");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
