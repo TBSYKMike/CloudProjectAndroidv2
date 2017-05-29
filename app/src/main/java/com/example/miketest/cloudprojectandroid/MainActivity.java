@@ -7,16 +7,20 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
     private final int SPEECH_RECOGNITION_CODE = 1;
+
+    public Button buttonRecord;
+    Button buttonStart;
+    Button buttonStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,14 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("light:   " + TemporaryStorage.getInstance().getLightOnOff());
         System.out.println("proximity;    " + TemporaryStorage.getInstance().getProximityOnoff());
         System.out.println("sampling:    " + TemporaryStorage.getInstance().getSamplingRate());
+
+        buttonRecord = (Button) findViewById( R.id.buttonRecord );
+        buttonStart = (Button) findViewById( R.id.sensorStopButton );
+        buttonStop = (Button) findViewById( R.id.sensorStopButton );
+
+        buttonRecord.setEnabled(true);
+        buttonStart.setEnabled(true);
+        buttonStop.setEnabled(false);
 
     }
 
@@ -73,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
 
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 
 
@@ -106,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;
+
+            case R.id.buttonRecord:
+                initializeSpeechToText();
+                break;
+
         }
 
     }

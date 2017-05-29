@@ -59,4 +59,13 @@
         android:text="loginLabel"
         android:layout_alignEnd="@+id/settingButton" />
 
+    <Button
+        android:id="@+id/buttonRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/sensorStartButton"
+        android:layout_toEndOf="@+id/sensorStartButton"
+        android:onClick="buttonClicked"
+        android:text="Record" />
+
 </RelativeLayout>

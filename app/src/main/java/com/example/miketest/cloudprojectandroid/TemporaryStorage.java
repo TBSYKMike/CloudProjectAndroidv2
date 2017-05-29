@@ -36,11 +36,12 @@ class TemporaryStorage {
         batchOperation = new TableBatchOperation();
 
         for (int i=0; i < ArrayOfSamplingData.size(); i++) {
-            System.out.println(ArrayOfSamplingData.get(i));
+            //System.out.println(ArrayOfSamplingData.get(i));
             dataSortAndAddToDatabaseV2(ArrayOfSamplingData.get(i));
-            if (batchOperation.size() > 90 ) {
+            if (batchOperation.size() > 50 ) {
                 new AzureTableConnectorV2( batchOperation ).execute();
-                batchOperation = new TableBatchOperation();
+                batchOperation.clear();
+
             }
         }
         if (batchOperation.size() > 0 ) {
@@ -48,6 +49,8 @@ class TemporaryStorage {
             batchOperation = new TableBatchOperation();
         }
 
+
+        ArrayOfSamplingData.clear();
     }
 
     public String getCurrentTimeStamp() {
@@ -108,7 +111,7 @@ class TemporaryStorage {
     }
 
     private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3, String timeNano){
-        SensorEntity sensor1 = new SensorEntity("1",  "pick@stick.se"+";"+timeNano );
+        SensorEntity sensor1 = new SensorEntity("1",  "Pick@stick.se"+";"+timeNano );
         if (sensorType.equals("accelerometer")) {
             sensor1.setSensorAccelerometerX(value1);
             sensor1.setSensorAccelerometerY(value2);
