@@ -83,7 +83,7 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
         if(TemporaryStorage.getInstance().isSensorStop()){
             sensorManager.unregisterListener(this);
-            TemporaryStorage.getInstance().printArrayList();
+            TemporaryStorage.getInstance().printArrayListV2();
             return;
         }
         else if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && (System.currentTimeMillis()-sensor1Time) > delayMili) {
@@ -181,31 +181,32 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
     private void setUpSensors() {
 
-            sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
 
-            int sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
-            ;
-            if (TemporaryStorage.getInstance().getSamplingRate() != null) {
-                if (TemporaryStorage.getInstance().getSamplingRate().equals(1))
-                    sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
-                else if (TemporaryStorage.getInstance().getSamplingRate().equals(2))
-                    sensorDelay = SensorManager.SENSOR_DELAY_GAME;
-                else if (TemporaryStorage.getInstance().getSamplingRate().equals(3))
-                    sensorDelay = SensorManager.SENSOR_DELAY_FASTEST;
-            }
-/*
-        if(TemporaryStorage.getInstance().getAcceleroMeterOnOff().equals(1))
+        int sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
+
+
+        if (TemporaryStorage.getInstance().getSamplingRate().equals("1")){
+            delayMili = 100;
+        }
+        else if (TemporaryStorage.getInstance().getSamplingRate().equals("2")){
+            delayMili = 1000;
+        }
+        else if (TemporaryStorage.getInstance().getSamplingRate().equals("3")){
+            delayMili = 2000;
+        }
+
+
+        if(TemporaryStorage.getInstance().getAcceleroMeterOnOff().equals("1")) {
             sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelay);
-
-        if(TemporaryStorage.getInstance().getProximityOnoff().equals(1))
+        }
+        if(TemporaryStorage.getInstance().getProximityOnoff().equals("1")) {
             sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorDelay);
+        }
+        if(TemporaryStorage.getInstance().getLightOnOff().equals("1")) {
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
+        }
 
-        if(TemporaryStorage.getInstance().getLightOnOff().equals(1))
-            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
-*/
-            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelay);
-            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorDelay);
-            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
 
     }
 

@@ -148,10 +148,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 //int count = TemporaryStorage.getInstance().cloudQueueCount();
                                 while (TemporaryStorage.getInstance().cloudQueueUploading2()) {
-                                    textViewStatus.setText("Uploading to Cloud " +TemporaryStorage.getInstance().uploadTasksFinihed+"/"+TemporaryStorage.getInstance().uploadTasksTotal);
+                                    textViewStatus.setText("Uploading to Cloud " +TemporaryStorage.getInstance().uploadTasksFinished+"/"+TemporaryStorage.getInstance().uploadTasksTotal);
                                     //System.out.println("cloudQueue: "+TemporaryStorage.getInstance().cloudQueueCount());
                                     try {
-                                        Thread.sleep(1000);
+                                        Thread.sleep(2000);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                                 buttonRecord.setEnabled(false);
                                 buttonStart.setEnabled(true);
                                 buttonStop.setEnabled(false);
-                                textViewStatus.setText("Upload Finished "+TemporaryStorage.getInstance().uploadTasksFinihed+"/"+TemporaryStorage.getInstance().uploadTasksTotal+"\n"+TemporaryStorage.getInstance().getCurrentTimeStamp());
+                                textViewStatus.setText("Upload Finished "+TemporaryStorage.getInstance().uploadTasksFinished+"/"+TemporaryStorage.getInstance().uploadTasksTotal+"\n"+TemporaryStorage.getInstance().getCurrentTimeStamp());
 
                             }
                         });

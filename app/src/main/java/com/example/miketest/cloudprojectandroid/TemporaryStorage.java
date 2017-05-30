@@ -12,12 +12,12 @@ import java.util.Date;
 
 class TemporaryStorage {
     private static final TemporaryStorage ourInstance = new TemporaryStorage();
-    String acceleroMeterOnOff;
-    String lightOnOff;
-    String proximityOnoff ;
-    String samplingRate;
+    String acceleroMeterOnOff = "1";
+    String lightOnOff = "1";
+    String proximityOnoff = "1";
+    String samplingRate = "1";
     private boolean sensorStop;
-    private String loggedInuserEmail;
+    private String loggedInuserEmail = "Pick@stick.se";
 
     static TemporaryStorage getInstance() {
         return ourInstance;
@@ -35,11 +35,20 @@ class TemporaryStorage {
     }
 
 
+    public void clearArrayOfSamplingData(){
+        ArrayOfSamplingData.clear();
+    }
+    public void printArrayListV2(){
+        uploadTasksTotal=0;
+        uploadTasksFinished=0;
+        new AzureTableConnectorV3( ArrayOfSamplingData ).execute();
+        //ArrayOfSamplingData.clear();
+    }
 
     public void printArrayList(){
         batchOperation = new TableBatchOperation();
         uploadTasksTotal=0;
-        uploadTasksFinihed=0;
+        uploadTasksFinished=0;
 
 
         for (int i=0; i < ArrayOfSamplingData.size(); i++) {
@@ -116,7 +125,6 @@ class TemporaryStorage {
         if(splitedData[0].equals("ACCEL")){
             String[] values = splitedData[1].split(",");
             batchOperation.insertOrReplace( inputRightSensorData("accelerometer", values[0], values[1], values[2], nanoTime ) );
-
         }
         else if(splitedData[0].equals("LIGHT")){
             batchOperation.insertOrReplace( inputRightSensorData("lightsensor", splitedData[1], null, null, nanoTime ) );
@@ -135,7 +143,7 @@ class TemporaryStorage {
     }
 
     private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3, String timeNano){
-        SensorEntity sensor1 = new SensorEntity("1",  "Pick@stick.se"+";"+timeNano );
+        SensorEntity sensor1 = new SensorEntity("1",  loggedInuserEmail+";"+timeNano );
         if (sensorType.equals("accelerometer")) {
             sensor1.setSensorAccelerometerX(value1);
             sensor1.setSensorAccelerometerY(value2);
@@ -236,7 +244,7 @@ class TemporaryStorage {
     public void cloudQueueStarted(){
         cloudQueue++;
         System.out.println("cloudQueueStarted");
-        uploadTasksFinihed++;
+        uploadTasksFinished++;
     }
 
     public void cloudQueueFinished(){
@@ -251,14 +259,21 @@ class TemporaryStorage {
         return true;
     }
     public boolean cloudQueueUploading2(){
-        System.out.println("total "+uploadTasksTotal+" - done "+uploadTasksFinihed);
-        if(uploadTasksTotal==uploadTasksFinihed){
+        System.out.println("total "+uploadTasksTotal+" - done "+uploadTasksFinished);
+        if(uploadTasksTotal==uploadTasksFinished){
+            return false;
+        }
+        if(!isUploading){
             return false;
         }
         return true;
     }
 
     public int uploadTasksTotal=0;
-    public int uploadTasksFinihed=0;
+    public int uploadTasksFinished=0;
+
+    public boolean isUploading = false;
+
+
 
 }
