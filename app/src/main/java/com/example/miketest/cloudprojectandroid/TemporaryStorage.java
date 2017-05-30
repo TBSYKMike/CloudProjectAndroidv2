@@ -23,6 +23,8 @@ class TemporaryStorage {
         return ourInstance;
     }
 
+
+
     // Storing all Sampling data
     private ArrayList <String> ArrayOfSamplingData = new ArrayList<>();
 
@@ -33,8 +35,12 @@ class TemporaryStorage {
     }
 
 
+
     public void printArrayList(){
         batchOperation = new TableBatchOperation();
+        uploadTasksTotal=0;
+        uploadTasksFinihed=0;
+
 
         for (int i=0; i < ArrayOfSamplingData.size(); i++) {
             //System.out.println(ArrayOfSamplingData.get(i));
@@ -42,11 +48,13 @@ class TemporaryStorage {
             if (batchOperation.size() > 50 ) {
                 new AzureTableConnectorV2( batchOperation ).execute();
                 batchOperation = new TableBatchOperation();
+                uploadTasksTotal++;
             }
         }
         if (batchOperation.size() > 0 ) {
             new AzureTableConnectorV2( batchOperation ).execute();
             batchOperation = new TableBatchOperation();
+            uploadTasksTotal++;
         }
         ArrayOfSamplingData.clear();
 
@@ -228,11 +236,13 @@ class TemporaryStorage {
     public void cloudQueueStarted(){
         cloudQueue++;
         System.out.println("cloudQueueStarted");
+        uploadTasksFinihed++;
     }
 
     public void cloudQueueFinished(){
         cloudQueue--;
         System.out.println("cloudQueueFinished");
+
     }
     public boolean cloudQueueUploading(){
         if(cloudQueue == 0){
@@ -240,6 +250,15 @@ class TemporaryStorage {
         }
         return true;
     }
+    public boolean cloudQueueUploading2(){
+        System.out.println("total "+uploadTasksTotal+" - done "+uploadTasksFinihed);
+        if(uploadTasksTotal==uploadTasksFinihed){
+            return false;
+        }
+        return true;
+    }
 
+    public int uploadTasksTotal=0;
+    public int uploadTasksFinihed=0;
 
 }

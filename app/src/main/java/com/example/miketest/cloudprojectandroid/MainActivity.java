@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         textViewTimeStart.setText("TimeStart: ");
         textViewTimeStop.setText(" :TimeStop");
 
-
     }
 
     private void setUserLabel(){
@@ -110,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         //sensorManager.unregisterListener(this);
     }
 
+
     public void buttonClicked(View view) {
         switch (view.getId()) {
             case R.id.sensorStartButton:
@@ -134,27 +134,34 @@ public class MainActivity extends AppCompatActivity {
                 buttonRecord.setEnabled(false);
                 buttonStart.setEnabled(false);
                 buttonStop.setEnabled(false);
+
                 textViewStatus.setText("Uploading to Cloud");
                 //textViewTimeStart.setText("TimeStart: " + TemporaryStorage.getInstance().getCurrentTimeStamp());
                 textViewTimeStop.setText(TemporaryStorage.getInstance().getCurrentTimeStamp() + " :TimeStop");
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                while (TemporaryStorage.getInstance().cloudQueueUploading()) {
-                                    System.out.println(TemporaryStorage.getInstance().cloudQueueUploading());
+
+                                //int count = TemporaryStorage.getInstance().cloudQueueCount();
+                                while (TemporaryStorage.getInstance().cloudQueueUploading2()) {
+                                    textViewStatus.setText("Uploading to Cloud " +TemporaryStorage.getInstance().uploadTasksFinihed+"/"+TemporaryStorage.getInstance().uploadTasksTotal);
+                                    //System.out.println("cloudQueue: "+TemporaryStorage.getInstance().cloudQueueCount());
                                     try {
-                                        Thread.sleep(500);
+                                        Thread.sleep(1000);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
+
                                 }
                                 buttonRecord.setEnabled(false);
                                 buttonStart.setEnabled(true);
                                 buttonStop.setEnabled(false);
-                                textViewStatus.setText("Upload Finished");
+                                textViewStatus.setText("Upload Finished "+TemporaryStorage.getInstance().uploadTasksFinihed+"/"+TemporaryStorage.getInstance().uploadTasksTotal+"\n"+TemporaryStorage.getInstance().getCurrentTimeStamp());
+
                             }
                         });
 
