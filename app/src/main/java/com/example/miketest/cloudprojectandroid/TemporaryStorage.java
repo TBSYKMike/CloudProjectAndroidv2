@@ -32,12 +32,29 @@ class TemporaryStorage {
         String newSamplingData = ""+SensorName+";;"+SensorData+";;"+getCurrentTimeStamp();
         ArrayOfSamplingData.add(newSamplingData);
         System.out.println(getCurrentTimeStamp());
+        autoUpload();
     }
 
 
     public void clearArrayOfSamplingData(){
         ArrayOfSamplingData.clear();
     }
+
+    public void autoUpload(){
+        // auto upload when ArrayOfSamplingData size is the size of uploadInterval
+        int uploadInterval = 500;
+        if(ArrayOfSamplingData.size() == uploadInterval) {
+               ArrayList<String> tempArrayOfSamplingData = new ArrayList<>();
+               for (int i = 0; i < uploadInterval; i++) {
+                   tempArrayOfSamplingData.add(ArrayOfSamplingData.get(0));
+                   ArrayOfSamplingData.remove(0);
+               }
+               new AzureTableConnectorV3(tempArrayOfSamplingData).execute();
+        }
+    }
+
+
+
     public void printArrayListV2(){
         uploadTasksTotal=0;
         uploadTasksFinished=0;

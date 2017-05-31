@@ -21,6 +21,8 @@ public class AzureTableConnectorV3 extends AsyncTask<String, Void, String> {
 
     ArrayList <String> ArrayOfSamplingData;
 
+    int batchSize = 50*1;
+
     public AzureTableConnectorV3(ArrayList <String> ArrayOfSamplingData) {
         this.ArrayOfSamplingData = ArrayOfSamplingData;
     }
@@ -33,11 +35,11 @@ public class AzureTableConnectorV3 extends AsyncTask<String, Void, String> {
         // params[1-3] is for the value from the sensor
 TemporaryStorage.getInstance().isUploading = true;
 
-        if (ArrayOfSamplingData.size()%50 > 0){
-            TemporaryStorage.getInstance().uploadTasksTotal = ArrayOfSamplingData.size()/50;
+        if (ArrayOfSamplingData.size()%batchSize > 0){
+            TemporaryStorage.getInstance().uploadTasksTotal = ArrayOfSamplingData.size()/batchSize;
             TemporaryStorage.getInstance().uploadTasksTotal++;
         }else{
-            TemporaryStorage.getInstance().uploadTasksTotal = ArrayOfSamplingData.size()/50;
+            TemporaryStorage.getInstance().uploadTasksTotal = ArrayOfSamplingData.size()/batchSize;
         }
 
         establishAzureConnection();
@@ -157,14 +159,20 @@ TemporaryStorage.getInstance().isUploading = true;
         for (int i = 0; i < ArrayOfSamplingData.size(); i++) {
             //System.out.println(ArrayOfSamplingData.get(i));
             dataSortAndAddToDatabaseV2(ArrayOfSamplingData.get(i));
-            if (batchOperation.size() >= 50) {
+            if (batchOperation.size() >= batchSize) {
                 try {
+
                     cloudTable.execute(batchOperation);
+                    TemporaryStorage.getInstance().uploadTasksFinished++;
                 } catch (StorageException e) {
                     e.printStackTrace();
+                    System.err.println(e.getErrorCode());
+                    System.err.println(e.getExtendedErrorInformation());
+                    System.err.println(e.getLocalizedMessage());
+                    System.err.println(e.getMessage());
                 }
                 batchOperation = new TableBatchOperation();
-                TemporaryStorage.getInstance().uploadTasksFinished++;
+
             }
         }
         if (batchOperation.size() > 0) {
@@ -172,6 +180,11 @@ TemporaryStorage.getInstance().isUploading = true;
                 cloudTable.execute(batchOperation);
             } catch (StorageException e) {
                 e.printStackTrace();
+                System.err.println(e.getErrorCode());
+                System.err.println(e.getExtendedErrorInformation());
+                System.err.println(e.getLocalizedMessage());
+                System.err.println(e.getMessage());
+
             }
             batchOperation = new TableBatchOperation();
 

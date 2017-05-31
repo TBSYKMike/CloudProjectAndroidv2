@@ -117,9 +117,21 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
          //   new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
         }
         if ( (System.currentTimeMillis()-battery0Time) > delayMili ) {
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             battery0Time = System.currentTimeMillis();
             checkBatteryLevel();
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
+
         /* SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int sensorFrequency = prefs.getInt("sensorFrequency", 10000);
         System.out.println("new value  " + sensorFrequency);
@@ -187,7 +199,7 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
 
         if (TemporaryStorage.getInstance().getSamplingRate().equals("1")){
-            delayMili = 100;
+            delayMili = 500;
         }
         else if (TemporaryStorage.getInstance().getSamplingRate().equals("2")){
             delayMili = 1000;
@@ -211,6 +223,7 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
     }
 
     private void checkBatteryLevel() {
+
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryCurrentStatus = context.registerReceiver(null, intentFilter);
         int level = batteryCurrentStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);

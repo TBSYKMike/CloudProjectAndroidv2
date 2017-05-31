@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                                     textViewStatus.setText("Uploading to Cloud " +TemporaryStorage.getInstance().uploadTasksFinished+"/"+TemporaryStorage.getInstance().uploadTasksTotal);
                                     //System.out.println("cloudQueue: "+TemporaryStorage.getInstance().cloudQueueCount());
                                     try {
-                                        Thread.sleep(2000);
+                                        Thread.sleep(5000);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
