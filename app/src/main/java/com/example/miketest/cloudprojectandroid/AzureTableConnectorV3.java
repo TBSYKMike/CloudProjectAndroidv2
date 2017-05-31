@@ -190,7 +190,10 @@ TemporaryStorage.getInstance().isUploading = true;
 
         }
         ArrayOfSamplingData.clear();
-        TemporaryStorage.getInstance().clearArrayOfSamplingData();
+        if(TemporaryStorage.getInstance().lastUploadPart) {
+            TemporaryStorage.getInstance().clearArrayOfSamplingData();
+            TemporaryStorage.getInstance().lastUploadPart = false;
+        }
 
     }
 

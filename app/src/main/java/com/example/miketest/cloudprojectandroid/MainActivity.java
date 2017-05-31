@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                 //Stop sensors
                 TemporaryStorage.getInstance().setSensorStop(true);
 
-                TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement STOP" );
                 //Upload to cloud
                 buttonRecord.setEnabled(false);
                 buttonStart.setEnabled(false);

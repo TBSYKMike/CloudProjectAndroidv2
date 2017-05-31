@@ -29,9 +29,12 @@ class TemporaryStorage {
     private ArrayList <String> ArrayOfSamplingData = new ArrayList<>();
 
     public void addDataToArray(String SensorName, String SensorData){
-        String newSamplingData = ""+SensorName+";;"+SensorData+";;"+getCurrentTimeStamp();
+
+        String currentTimeStamp = getCurrentTimeStamp();
+        String newSamplingData = ""+SensorName+";;"+SensorData+";;"+currentTimeStamp;
         ArrayOfSamplingData.add(newSamplingData);
-        System.out.println(getCurrentTimeStamp());
+        //System.out.println(getCurrentTimeStamp());
+        System.out.println( "---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- timestamp: "+currentTimeStamp );
         autoUpload();
     }
 
@@ -42,7 +45,7 @@ class TemporaryStorage {
 
     public void autoUpload(){
         // auto upload when ArrayOfSamplingData size is the size of uploadInterval
-        int uploadInterval = 500;
+        int uploadInterval = 200;
         if(ArrayOfSamplingData.size() == uploadInterval) {
                ArrayList<String> tempArrayOfSamplingData = new ArrayList<>();
                for (int i = 0; i < uploadInterval; i++) {
@@ -53,9 +56,18 @@ class TemporaryStorage {
         }
     }
 
-
+    public boolean lastUploadPart = false;
 
     public void printArrayListV2(){
+        while(isUploading){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        lastUploadPart = true;
+        System.out.println( ArrayOfSamplingData.size() );
         uploadTasksTotal=0;
         uploadTasksFinished=0;
         new AzureTableConnectorV3( ArrayOfSamplingData ).execute();

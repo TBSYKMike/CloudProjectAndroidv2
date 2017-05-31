@@ -83,6 +83,12 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
         if(TemporaryStorage.getInstance().isSensorStop()){
             sensorManager.unregisterListener(this);
+            TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement STOP" );
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             TemporaryStorage.getInstance().printArrayListV2();
             return;
         }
@@ -113,6 +119,11 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY && (System.currentTimeMillis()-sensor3Time) > delayMili) {
             sensor3Time = System.currentTimeMillis();
             System.out.println("Proximity sensor value " + sensorEvent.values[0]);
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             TemporaryStorage.getInstance().addDataToArray("PROXI",""+sensorEvent.values[0]);
          //   new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
         }
