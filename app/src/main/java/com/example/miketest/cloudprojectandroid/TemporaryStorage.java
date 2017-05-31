@@ -28,9 +28,19 @@ class TemporaryStorage {
     // Storing all Sampling data
     private ArrayList <String> ArrayOfSamplingData = new ArrayList<>();
 
+    private String currentTimeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+
     public void addDataToArray(String SensorName, String SensorData){
 
-        String currentTimeStamp = getCurrentTimeStamp();
+        if (getCurrentTimeStamp().equals(currentTimeStamp)){
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        currentTimeStamp = getCurrentTimeStamp();
         String newSamplingData = ""+SensorName+";;"+SensorData+";;"+currentTimeStamp;
         ArrayOfSamplingData.add(newSamplingData);
         //System.out.println(getCurrentTimeStamp());
