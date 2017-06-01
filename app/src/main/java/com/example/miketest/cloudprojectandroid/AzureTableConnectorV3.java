@@ -21,6 +21,8 @@ public class AzureTableConnectorV3 extends AsyncTask<String, Void, String> {
 
     ArrayList <String> ArrayOfSamplingData;
 
+    String email;
+
     int batchSize = 50*1;
 
     public AzureTableConnectorV3(ArrayList <String> ArrayOfSamplingData) {
@@ -31,6 +33,7 @@ public class AzureTableConnectorV3 extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         // we use the OkHttp library from https://github.com/square/okhttp
         TemporaryStorage.getInstance().cloudQueueStarted();
+        email = TemporaryStorage.getInstance().getLoggedInuserEmail();
         // params[0] is for the type of sensor
         // params[1-3] is for the value from the sensor
 TemporaryStorage.getInstance().isUploading = true;
@@ -55,7 +58,8 @@ TemporaryStorage.getInstance().isUploading = true;
     }
 
     private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3, String timeNano){
-        SensorEntity sensor1 = new SensorEntity("1",  "user1"+";;"+timeNano );
+
+        SensorEntity sensor1 = new SensorEntity("1",  email+";;"+timeNano );
         if (sensorType.equals("accelerometer")) {
             sensor1.setSensorAccelerometerX(value1);
             sensor1.setSensorAccelerometerY(value2);
