@@ -59,7 +59,7 @@ TemporaryStorage.getInstance().isUploading = true;
 
     private SensorEntity inputRightSensorData(String sensorType, String value1,String value2,String value3, String timeNano){
 
-        SensorEntity sensor1 = new SensorEntity("1",  email+";;"+timeNano );
+        SensorEntity sensor1 = new SensorEntity("1",  email+";"+timeNano );
         if (sensorType.equals("accelerometer")) {
             sensor1.setSensorAccelerometerX(value1);
             sensor1.setSensorAccelerometerY(value2);
