@@ -55,7 +55,7 @@ class TemporaryStorage {
 
     public void autoUpload(){
         // auto upload when ArrayOfSamplingData size is the size of uploadInterval
-        int uploadInterval = 200;
+        int uploadInterval = 400;
         if(ArrayOfSamplingData.size() == uploadInterval) {
                ArrayList<String> tempArrayOfSamplingData = new ArrayList<>();
                for (int i = 0; i < uploadInterval; i++) {
