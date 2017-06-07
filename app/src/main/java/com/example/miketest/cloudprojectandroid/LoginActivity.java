@@ -23,32 +23,27 @@ import java.net.URL;
 public class LoginActivity extends Activity {
     public Context context;
 
+    //Activity used for the login screen
     public class MyWebViewClient extends WebViewClient {
     }
 
     private WebView webView;
-    private String url = "http://couldprojectazurev220170522075651.azurewebsites.net/Account/Login";//@SuppressLint("SetJavaScriptEnabled")
+    private String url = "http://couldprojectazurev220170522075651.azurewebsites.net/Account/Login";
     private String email;
     private String password;
     public String allCookies;
     private int counter = 0;
     private boolean finish = false;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
         setContentView(R.layout.activity_login);
-/*
-        mWebView = (WebView) findViewById(R.id.webView1);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.loadUrl("http://webapplication120170522065558.azurewebsites.net/");}}
-*/
     }
 
+    //When the user presses the login button
     public void onLoginButtonPressed(View view) {
-
         android.webkit.CookieManager cookieManager = CookieManager.getInstance();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
@@ -62,19 +57,16 @@ public class LoginActivity extends Activity {
             cookieManager.removeAllCookie();
         }
 
-
         EditText passwordEdit = (EditText) findViewById(R.id.password_Text);
         EditText emailEdit = (EditText) findViewById(R.id.email_Text);
         email = emailEdit.getText().toString();
         password = passwordEdit.getText().toString();
-
         webView = (WebView) findViewById(R.id.webView);
-        //   mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        //   mWebView.getSettings().setBuiltInZoomControls(true);
+
         webView.setWebViewClient(new MyWebViewClient() {
             @Override
             public void onLoadResource(WebView view, String url) {
-                System.out.println("Current URL : " + url + " " + Html.fromHtml("<br>") + " is http url ? " + URLUtil.isHttpUrl(url));
+                System.out.println("The URL is : " + url + " " + Html.fromHtml("<br>") + "  isHttpUrl?: " + URLUtil.isHttpUrl(url));
             }
 
             @Override
@@ -92,7 +84,7 @@ public class LoginActivity extends Activity {
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
-
+                    //Javascript for setting the inputted user information in the fields in the web view
                     final String javascript = "javascript:" +
                             "document.getElementById('MainContent_Email').value = '" + email + "';" +
                             "document.getElementById('MainContent_Password').value = '" + password + "';" +
@@ -109,18 +101,18 @@ public class LoginActivity extends Activity {
                             }
                         });
                     } else {
-                        view.loadUrl(javascript);
+                        view.loadUrl(javascript); //Execute the javascript
                     }
 
-                    if (counter == 1) {
+                    if (counter == 1) { //onPageFinished is run twice in order to retrieve the cookies that we set. The cookies we need are retrieved on second attempt
                         String loginResult = null;
-                        while (loginResult == null) {
+                        while (loginResult == null) { //Waiting until login cookie can be retrieved.
                             if (allCookies != null) {
                                 loginResult = findCertainCookie("loginSuccessCookie");
                             }
                         }
-                        System.out.println("look:   " + loginResult);
-                        if (loginResult.equals("true")) {
+
+                        if (loginResult.equals("true")) { //Login successful
                             webView.getSettings().setJavaScriptEnabled(true);
                             webView.loadUrl(url);
                             System.out.println("Logged in as:   " + email);
@@ -129,7 +121,7 @@ public class LoginActivity extends Activity {
                             Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(myIntent);
 
-                        } else {
+                        } else { //Login not successful
                             System.out.println("Invalid login attempt");
                             Toast.makeText(getApplicationContext(), "Invalid login attempt", Toast.LENGTH_SHORT).show();
                             Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -147,10 +139,10 @@ public class LoginActivity extends Activity {
         if (finish == false) {
             webView.getSettings().setJavaScriptEnabled(true);
             webView.loadUrl(url);
-
         }
     }
 
+    //Method for retrieving a certain cookie
     public String findCertainCookie(String cookieName) {
         String certainCookie = null;
         String[] cookieList = allCookies.split(";");
@@ -164,6 +156,7 @@ public class LoginActivity extends Activity {
         return certainCookie;
     }
 
+    //Calling the cookie retrieving method for all cookies as well as storing the variables retrieved in the temporary storage
     private void loadUserSettings(){
         String accelerometerOnOff = findCertainCookie("AccelerometerOnoff");
         String lightOnOff = findCertainCookie("LightOnOff");

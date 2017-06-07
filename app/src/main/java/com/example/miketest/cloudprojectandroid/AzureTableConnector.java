@@ -77,7 +77,7 @@ public class AzureTableConnector extends AsyncTask<String, Void, String> {
         String storageConnectionString =
                 "DefaultEndpointsProtocol=https;AccountName=hkrtest;AccountKey=xMmOQjMFbLY6R5cHcfUAQjZXRRp50eLTiFspybB929IGYsBnuVbCME/6bcxejT2kd3rEJLBBfcQXi8e0TLfPbg==;EndpointSuffix=core.windows.net";
         try {
-    //        System.out.println("1");
+            System.out.println("1");
             // Retrieve storage account from connection-string.
             CloudStorageAccount storageAccount =
                     CloudStorageAccount.parse(storageConnectionString);
