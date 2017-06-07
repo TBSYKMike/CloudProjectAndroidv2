@@ -11,7 +11,7 @@ import com.microsoft.azure.storage.table.TableBatchOperation;
 import java.util.ArrayList;
 
 /**
- * Created by Henrik on 2017-05-05.
+ * Created by Mike on 2017-05-05.
  */
 
 public class AzureTableConnectorV3 extends AsyncTask<String, Void, String> {
