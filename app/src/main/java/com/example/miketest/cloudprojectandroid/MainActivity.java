@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //  new WebServiceConnector().execute();
 
         setUserLabel();
 
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("sampling:    " + TemporaryStorage.getInstance().getSamplingRate());
 
         setupLayout();
-
     }
 
     private void setupLayout(){
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         textView.setText("Logged in as:   " + userEmail);
     }
 
-
+    //Method for initializing speech to text
     private void initializeSpeechToText() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH);
