@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      //  new WebServiceConnector().execute();
+        //  new WebServiceConnector().execute();
 
         setUserLabel();
 
@@ -41,9 +41,14 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("proximity;    " + TemporaryStorage.getInstance().getProximityOnoff());
         System.out.println("sampling:    " + TemporaryStorage.getInstance().getSamplingRate());
 
-        buttonRecord = (Button) findViewById( R.id.buttonRecord );
-        buttonStart = (Button) findViewById( R.id.sensorStartButton );
-        buttonStop = (Button) findViewById( R.id.sensorStopButton );
+        setupLayout();
+
+    }
+
+    private void setupLayout(){
+        buttonRecord = (Button) findViewById(R.id.buttonRecord);
+        buttonStart = (Button) findViewById(R.id.sensorStartButton);
+        buttonStop = (Button) findViewById(R.id.sensorStopButton);
         textViewStatus = (TextView) findViewById(R.id.textViewStatus);
         textViewTimeStart = (TextView) findViewById(R.id.textViewTimeStart);
         textViewTimeStop = (TextView) findViewById(R.id.textViewTimeStop);
@@ -54,12 +59,12 @@ public class MainActivity extends AppCompatActivity {
 
         textViewTimeStart.setText("TimeStart: ");
         textViewTimeStop.setText(" :TimeStop");
-
     }
 
-    private void setUserLabel(){
+
+    private void setUserLabel() {
         String userEmail = TemporaryStorage.getInstance().getLoggedInuserEmail();
-        TextView textView=(TextView)findViewById(R.id.loginLabel);
+        TextView textView = (TextView) findViewById(R.id.loginLabel);
         textView.setText("Logged in as:   " + userEmail);
     }
 
@@ -67,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeSpeechToText() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak");
         try {
             startActivityForResult(intent, SPEECH_RECOGNITION_CODE);
@@ -83,37 +88,34 @@ public class MainActivity extends AppCompatActivity {
             case SPEECH_RECOGNITION_CODE: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    String convertResult = speechConvertedToText.get(0); //Vi skickar bara upp detta till cloud så blir det lättare
+                    String convertResult = speechConvertedToText.get(0);
                     Toast.makeText(getApplicationContext(), "To text   " + convertResult, Toast.LENGTH_SHORT).show();
                     System.out.println("To text   " + convertResult);
-                    TemporaryStorage.getInstance().addDataToArray("METAD", "Voice: "+convertResult );
+                    // Save the Voice to the ArrayList
+                    TemporaryStorage.getInstance().addDataToArray("METAD", "Voice: " + convertResult);
                 }
                 break;
             }
         }
     }
+
     @Override
     protected void onResume() {
-
-
-        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-
-
         super.onResume();
     }
 
     protected void onPause() {
         super.onPause();
-        System.out.println("On resume");
-        //sensorManager.unregisterListener(this);
     }
 
 
     public void buttonClicked(View view) {
         switch (view.getId()) {
             case R.id.sensorStartButton:
-                TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement START" );
+                // Start Readings
+                // Save StartTime to ArrayList
+                TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement START");
+
                 initializeSpeechToText();
                 TemporaryStorage.getInstance().setSensorStop(false);
                 new SensorHandler(this).execute();
@@ -126,18 +128,18 @@ public class MainActivity extends AppCompatActivity {
                 textViewTimeStop.setText(" :TimeStop");
                 break;
             case R.id.sensorStopButton:
-                //Stop sensors
+                //Stop All Sensor Readings
                 TemporaryStorage.getInstance().setSensorStop(true);
 
-                //Upload to cloud
+                // Temporary Disable All Buttons
                 buttonRecord.setEnabled(false);
                 buttonStart.setEnabled(false);
                 buttonStop.setEnabled(false);
 
                 textViewStatus.setText("Uploading to Cloud");
-                //textViewTimeStart.setText("TimeStart: " + TemporaryStorage.getInstance().getCurrentTimeStamp());
                 textViewTimeStop.setText(TemporaryStorage.getInstance().getCurrentTimeStamp() + " :TimeStop");
 
+                // Start Handler to re-Enable buttons when upload is finished
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //int count = TemporaryStorage.getInstance().cloudQueueCount();
                                 while (TemporaryStorage.getInstance().cloudQueueUploading2()) {
-                                    textViewStatus.setText("Uploading to Cloud " +TemporaryStorage.getInstance().uploadTasksFinished+"/"+TemporaryStorage.getInstance().uploadTasksTotal);
+                                    textViewStatus.setText("Uploading to Cloud " + TemporaryStorage.getInstance().uploadTasksFinished + "/" + TemporaryStorage.getInstance().uploadTasksTotal);
                                     //System.out.println("cloudQueue: "+TemporaryStorage.getInstance().cloudQueueCount());
                                     try {
                                         Thread.sleep(5000);
@@ -159,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                                 buttonRecord.setEnabled(false);
                                 buttonStart.setEnabled(true);
                                 buttonStop.setEnabled(false);
-                                textViewStatus.setText("Upload Finished "+TemporaryStorage.getInstance().uploadTasksFinished+"/"+TemporaryStorage.getInstance().uploadTasksTotal+"\n"+TemporaryStorage.getInstance().getCurrentTimeStamp());
+                                textViewStatus.setText("Upload Finished " + TemporaryStorage.getInstance().uploadTasksFinished + "/" + TemporaryStorage.getInstance().uploadTasksTotal + "\n" + TemporaryStorage.getInstance().getCurrentTimeStamp());
 
                             }
                         });
@@ -171,21 +173,19 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.logoutButton:
+                // Logout user
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.buttonRecord:
+                // Record voice from user
                 initializeSpeechToText();
                 break;
 
         }
 
     }
-
-
-
-
 
 
 }

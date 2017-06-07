@@ -10,9 +10,6 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import static android.content.Context.SENSOR_SERVICE;
 
 /**
@@ -20,30 +17,15 @@ import static android.content.Context.SENSOR_SERVICE;
  */
 
 public class SensorHandler extends AsyncTask<String, Void, String> implements SensorEventListener {
-    private float currentAccelerationValue = SensorManager.GRAVITY_EARTH;
-    private float previousAccelerationValue = SensorManager.GRAVITY_EARTH;
-    private float accelerationValue = 0.00f;
+
     private Context context;
     private SensorManager sensorManager;
-
 
 
     public SensorHandler(Context context) {
         this.context = context;
     }
 
-    /**
-     * <p>Applications should preferably override {@link #onCancelled(Object)}.
-     * This method is invoked by the default implementation of
-     * {@link #onCancelled(Object)}.</p>
-     * <p>
-     * <p>Runs on the UI thread after {@link #cancel(boolean)} is invoked and
-     * {@link #doInBackground(Object[])} has finished.</p>
-     *
-     * @see #onCancelled(Object)
-     * @see #cancel(boolean)
-     * @see #isCancelled()
-     */
     @Override
     protected void onCancelled() {
 
@@ -62,139 +44,82 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
 
     }
 
-
-    public String getCurrentTimeStamp() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-    }
-
     private long delayMili = 500; // set delay in milliseconds
     private long battery0Time = System.currentTimeMillis();
     private long sensor1Time = System.currentTimeMillis();
     private long sensor2Time = System.currentTimeMillis();
     private long sensor3Time = System.currentTimeMillis();
+    /*
+    private long sensor4Time = System.currentTimeMillis();
+     */
 
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-        //TemporaryStorage.getInstance().autoUpload();
-
-
-
-        if(TemporaryStorage.getInstance().isSensorStop()){
+        if (TemporaryStorage.getInstance().isSensorStop()) {
+            // stop all sensor readings
             sensorManager.unregisterListener(this);
-            TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement STOP" );
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+            // Add stop data to ArrayList
+            TemporaryStorage.getInstance().addDataToArray("METAD", "Measurement STOP");
+            threadSleep(2000);
+
+            // run the Upload function.
             TemporaryStorage.getInstance().printArrayListV2();
             return;
-        }
-        else if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && (System.currentTimeMillis()-sensor1Time) > delayMili) {
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && (System.currentTimeMillis() - sensor1Time) > delayMili) {
             sensor1Time = System.currentTimeMillis();
 
             float xValue = sensorEvent.values[0];
             float yValue = sensorEvent.values[1];
             float zValue = sensorEvent.values[2];
 
-            previousAccelerationValue = currentAccelerationValue;
-            currentAccelerationValue = (float) (float) Math.sqrt(xValue * xValue + yValue * yValue + zValue * zValue);
-            float accelerationValueChange = currentAccelerationValue - previousAccelerationValue;
-            accelerationValue = accelerationValue * 0.9f + accelerationValueChange;
-            if (true) {
-                System.out.println("Accelerometer change"+" X,Y,Z: "+xValue+","+yValue+","+zValue);
-                TemporaryStorage.getInstance().addDataToArray("ACCEL",""+xValue+","+yValue+","+zValue);
-             //  new AzureTableConnector("accelerometer", Float.toString(xValue),Float.toString(yValue),Float.toString(zValue)).execute();
+            System.out.println("Accelerometer change" + " X,Y,Z: " + xValue + "," + yValue + "," + zValue);
+            TemporaryStorage.getInstance().addDataToArray("ACCEL", "" + xValue + "," + yValue + "," + zValue);
 
-                //TemporaryStorage.getInstance().printArrayList();
-            }
-        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT && (System.currentTimeMillis()-sensor2Time) > delayMili) {
-                sensor2Time = System.currentTimeMillis();
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT && (System.currentTimeMillis() - sensor2Time) > delayMili) {
+            sensor2Time = System.currentTimeMillis();
 
-            System.out.println("Light sensor value " + sensorEvent.values[0]);
-            TemporaryStorage.getInstance().addDataToArray("LIGHT",""+sensorEvent.values[0]);
-           // new AzureTableConnector("lightsensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
-        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY && (System.currentTimeMillis()-sensor3Time) > delayMili) {
+            float value1 = sensorEvent.values[0];
+
+            System.out.println("Light sensor value " + value1);
+            TemporaryStorage.getInstance().addDataToArray("LIGHT", "" + value1);
+
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY && (System.currentTimeMillis() - sensor3Time) > delayMili) {
             sensor3Time = System.currentTimeMillis();
-            System.out.println("Proximity sensor value " + sensorEvent.values[0]);
-            try {
-                Thread.sleep(25);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            TemporaryStorage.getInstance().addDataToArray("PROXI",""+sensorEvent.values[0]);
-         //   new AzureTableConnector("proximitysensor", Float.toString(sensorEvent.values[0]), null, null ).execute();
-        }
-        if ( (System.currentTimeMillis()-battery0Time) > delayMili ) {
-            try {
-                Thread.sleep(25);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            battery0Time = System.currentTimeMillis();
-            checkBatteryLevel();
-            try {
-                Thread.sleep(25);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
 
+            float value1 = sensorEvent.values[0];
 
-        /* SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int sensorFrequency = prefs.getInt("sensorFrequency", 10000);
-        System.out.println("new value  " + sensorFrequency);
+            threadSleep(25);
+            System.out.println("Proximity sensor value " + value1);
+            TemporaryStorage.getInstance().addDataToArray("PROXI", "" + value1);
 
-       if(sensorFreqencySaved!=sensorFrequency){
-            sensorManager.unregisterListener(this);
-            setUpSensors(sensorFrequency);
-            sensorFreqencySaved = sensorFrequency;
+        }/*
+
+        else if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && (System.currentTimeMillis() - sensor4Time) > delayMili) {
+            // Sensor4Time is to set the reading delay
+            sensor4Time = System.currentTimeMillis();
+
+            // If you have multiple values from the device
+            float xValue = sensorEvent.values[0];
+            float yValue = sensorEvent.values[1];
+            float zValue = sensorEvent.values[2];
+
+            System.out.println("Accelerometer change" + " X,Y,Z: " + xValue + "," + yValue + "," + zValue);
+            // Add the data to ArrayList
+            TemporaryStorage.getInstance().addDataToArray("ACCEL", "" + xValue + "," + yValue + "," + zValue);
+
         }*/
 
 
-
-
-    //    checkSensorStatus("accelerometerOnOff");
-      //  checkSensorStatus("proximityOnOff");
-      //  checkSensorStatus("lightOnOff");
-
-    }
-
- /*   private void checkSensorStatus(String sensorPrefName){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int axOnOffStored = prefs.getInt(sensorPrefName, 1);
-        if(axOnOffStored==0){
-            turnOffSensor(sensorPrefName);
-        }
-        else{
-            turnOnSensor(sensorPrefName);
+        if ((System.currentTimeMillis() - battery0Time) > delayMili) {
+            threadSleep(25);
+            battery0Time = System.currentTimeMillis();
+            checkBatteryLevel();
+            threadSleep(25);
         }
     }
-
-
-    private void turnOffSensor(String sensorName){
-            if (sensorName.equals("accelerometerOnOff"))
-                sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
-            else if (sensorName.equals("lightOnOff"))
-                sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT));
-            else if (sensorName.equals("proximityOnOff"))
-                sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY));
-    }*/
-
-   /* private void turnOnSensor(String sensorName){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int sensorFrequency = prefs.getInt("sensorFrequency", 10000);
-
-        if (sensorName.equals("accelerometerOnOff"))
-            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),sensorFrequency);
-        else if (sensorName.equals("lightOnOff"))
-            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),sensorFrequency);
-        else if (sensorName.equals("proximityOnOff"))
-            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY),sensorFrequency);
-    }*/
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
@@ -209,27 +134,30 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         int sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
 
 
-        if (TemporaryStorage.getInstance().getSamplingRate().equals("1")){
+        if (TemporaryStorage.getInstance().getSamplingRate().equals("1")) {
             delayMili = 500;
-        }
-        else if (TemporaryStorage.getInstance().getSamplingRate().equals("2")){
+        } else if (TemporaryStorage.getInstance().getSamplingRate().equals("2")) {
             delayMili = 1000;
-        }
-        else if (TemporaryStorage.getInstance().getSamplingRate().equals("3")){
+        } else if (TemporaryStorage.getInstance().getSamplingRate().equals("3")) {
             delayMili = 2000;
         }
 
 
-        if(TemporaryStorage.getInstance().getAcceleroMeterOnOff().equals("1")) {
+        if (TemporaryStorage.getInstance().getAcceleroMeterOnOff().equals("1")) {
             sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorDelay);
         }
-        if(TemporaryStorage.getInstance().getProximityOnoff().equals("1")) {
+        if (TemporaryStorage.getInstance().getProximityOnoff().equals("1")) {
             sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), sensorDelay);
         }
-        if(TemporaryStorage.getInstance().getLightOnOff().equals("1")) {
+        if (TemporaryStorage.getInstance().getLightOnOff().equals("1")) {
             sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
         }
-
+        /*
+        // Example Code of adding new sensor
+        if (TemporaryStorage.getInstance().getLightOnOff().equals("1")) {
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), sensorDelay);
+        }
+        */
 
     }
 
@@ -242,13 +170,17 @@ public class SensorHandler extends AsyncTask<String, Void, String> implements Se
         float batteryPercentLeft = level / (float) scale;
         System.out.println("Battery level is:   " + batteryPercentLeft);
 
-        TemporaryStorage.getInstance().addDataToArray("BATRY",""+batteryPercentLeft);
+        // Add data to ArrayList
+        TemporaryStorage.getInstance().addDataToArray("BATRY", "" + batteryPercentLeft);
 
+    }
 
-    /*    System.out.println("USAGE:   " + sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).getPower());
-        System.out.println("USAGE light:   " + sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT).getPower());
-        System.out.println("USAGE prox:   " + sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY).getPower());
-    */
+    private void threadSleep(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
