@@ -26,6 +26,7 @@ public class AzureTableConnectorV3 extends AsyncTask<String, Void, String> {
     int batchSize = 50 * 1;
 
     public AzureTableConnectorV3(ArrayList<String> ArrayOfSamplingData) {
+        // this AsyncTasks will task a ArrayList and parsing it though some method and adding it to batches and send it to Azure Storage Table
         this.ArrayOfSamplingData = ArrayOfSamplingData;
     }
 
